@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" href="assets/logo-lap.png">
 <link rel="manifest" href="manifest.json">
 
-<!-- FUENTE VIP: POPPINS -->
+<!-- FUENTE VIP -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -25,7 +25,7 @@ body{
   flex-direction: column;
 }
 
-/* BOTÓN VIP */
+/* BOTÓN VIP CON PULSO */
 button{
   width: 340px;
   height: 340px;
@@ -41,13 +41,33 @@ button{
     0 25px 60px rgba(0,0,0,0.85),
     inset 0 2px 10px rgba(255,255,255,0.25);
   transition: all 0.2s ease;
+
+  /* 🔥 PULSO */
+  animation: pulse 2.5s infinite;
 }
 
+/* efecto click */
 button:active{
   transform: scale(0.94);
 }
 
-/* MENSAJE */
+/* animación pulso */
+@keyframes pulse{
+  0% {
+    box-shadow: 0 0 0 0 rgba(212,175,55,0.4),
+                0 25px 60px rgba(0,0,0,0.85);
+  }
+  70% {
+    box-shadow: 0 0 0 25px rgba(212,175,55,0),
+                0 25px 60px rgba(0,0,0,0.85);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(212,175,55,0),
+                0 25px 60px rgba(0,0,0,0.85);
+  }
+}
+
+/* mensaje */
 #mensaje{
   margin-top: 25px;
   font-size: 18px;
@@ -82,9 +102,8 @@ fetch("https://script.google.com/macros/s/AKfycbxU5N9gvYgnr6ziPolPuPircfFdsRzLgC
 .then(() => {
 
   document.getElementById("mensaje").innerHTML =
-  "✔ Solicitud enviada. Personal en camino";
+  "✔ Solicitud enviada";
 
-  // 🔥 limpiar mensaje automáticamente después de 3.5 segundos
   setTimeout(() => {
     document.getElementById("mensaje").innerHTML = "";
   }, 3500);
