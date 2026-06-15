@@ -8,13 +8,14 @@
 <link rel="apple-touch-icon" href="assets/logo-lap.png">
 <link rel="manifest" href="manifest.json">
 
-<!-- FUENTE PREMIUM -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- FUENTE VIP: POPPINS -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+
 body{
-  font-family: 'Inter', Arial, sans-serif;
-  background: radial-gradient(circle at top, #1b1b1b, #000000);
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top, #2a2a2a, #000000);
   color: white;
   display: flex;
   justify-content: center;
@@ -24,7 +25,7 @@ body{
   flex-direction: column;
 }
 
-/* BOTÓN PRINCIPAL VIP */
+/* BOTÓN VIP */
 button{
   width: 340px;
   height: 340px;
@@ -34,39 +35,28 @@ button{
   color: #111;
   font-weight: 700;
   font-size: 24px;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   cursor: pointer;
   box-shadow:
-    0 20px 60px rgba(0,0,0,0.8),
-    inset 0 2px 10px rgba(255,255,255,0.2);
+    0 25px 60px rgba(0,0,0,0.85),
+    inset 0 2px 10px rgba(255,255,255,0.25);
   transition: all 0.2s ease;
 }
 
-/* click efecto */
 button:active{
   transform: scale(0.94);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
 }
 
-/* pulso suave (da sensación viva) */
-button{
-  animation: pulse 2.5s infinite;
-}
-
-@keyframes pulse{
-  0% { box-shadow: 0 0 0 0 rgba(212,175,55,0.4); }
-  70% { box-shadow: 0 0 0 25px rgba(212,175,55,0); }
-  100% { box-shadow: 0 0 0 0 rgba(212,175,55,0); }
-}
-
-/* mensaje */
+/* MENSAJE */
 #mensaje{
   margin-top: 25px;
   font-size: 18px;
   color: #00ff88;
   text-align: center;
   font-weight: 500;
+  min-height: 20px;
 }
+
 </style>
 
 </head>
@@ -91,8 +81,13 @@ fetch("https://script.google.com/macros/s/AKfycbxU5N9gvYgnr6ziPolPuPircfFdsRzLgC
 .then(r => r.text())
 .then(() => {
 
-document.getElementById("mensaje").innerHTML =
-"✓ Solicitud enviada (Mesa " + mesa + ")";
+  document.getElementById("mensaje").innerHTML =
+  "✔ Solicitud enviada. Personal en camino";
+
+  // 🔥 limpiar mensaje automáticamente después de 3.5 segundos
+  setTimeout(() => {
+    document.getElementById("mensaje").innerHTML = "";
+  }, 3500);
 
 });
 
