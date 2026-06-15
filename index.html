@@ -55,21 +55,6 @@ ATENCIÓN
 
 <script>
 
-function enviarSolicitud(){
-
-const mesa = 6;
-
-fetch("https://script.google.com/macros/s/AKfycbxJpgRfDXjOgwfEVIjwauHur_qMk_NYSInFce1jQnpUiyevziteJDZw1Ra9jFE5Rro/exec?mesa="+mesa)
-.then(response => response.text())
-.then(data => {
-
-document.getElementById("mensaje").innerHTML =
-"✓ Solicitud enviada (Mesa " + mesa + ")";
-
-});
-
-}
-
 </script>
 
 </body>
