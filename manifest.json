@@ -1,7 +1,8 @@
 {
   "name": "Atención VIP",
   "short_name": "VIP",
-  "start_url": ".",
+  "start_url": "/atencionprotocolo/",
+  "scope": "/atencionprotocolo/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
