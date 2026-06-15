@@ -57,16 +57,8 @@ ATENCIÓN
 
 function enviarSolicitud(){
 
-// 🔵 OBTENER MESA DEL DISPOSITIVO
-const mesa = localStorage.getItem("mesa");
+const mesa = 6;
 
-if (!mesa) {
-  document.getElementById("mensaje").innerHTML =
-  "⚠ Mesa no configurada en este dispositivo";
-  return;
-}
-
-// 🔵 ENVIAR A GOOGLE SCRIPT
 fetch("https://script.google.com/macros/s/AKfycbxJpgRfDXjOgwfEVIjwauHur_qMk_NYSInFce1jQnpUiyevziteJDZw1Ra9jFE5Rro/exec?mesa="+mesa)
 .then(response => response.text())
 .then(data => {
