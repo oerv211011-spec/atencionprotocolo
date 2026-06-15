@@ -9,37 +9,45 @@
 <link rel="manifest" href="manifest.json">
 
 <style>
-
 body{
-font-family:Arial;
-background:#000;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-margin:0;
-flex-direction:column;
+  font-family: Arial;
+  background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  flex-direction: column;
 }
 
+/* BOTÓN VIP */
 button{
-width:350px;
-height:350px;
-font-size:40px;
-border-radius:50%;
-border:none;
-background:#d4af37;
-color:black;
-font-weight:bold;
-cursor:pointer;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  border: 3px solid #d4af37;
+  background: radial-gradient(circle at top, #f5d98b, #b8860b);
+  color: #111;
+  font-weight: bold;
+  font-size: 26px;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  transition: all 0.2s ease;
+}
+
+/* efecto al presionar */
+button:active{
+  transform: scale(0.95);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
 }
 
 #mensaje{
-margin-top:30px;
-font-size:24px;
-color:#00ff88;
+  margin-top: 25px;
+  font-size: 20px;
+  color: #00ff88;
+  text-align: center;
 }
-
 </style>
 
 </head>
