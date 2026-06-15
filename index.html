@@ -54,10 +54,17 @@ ATENCIÓN
 
 <script>
 
+// 🔵 SE EJECUTA AL ABRIR LA APP
+const params = new URLSearchParams(window.location.search);
+const mesaURL = params.get("mesa");
+
+if (mesaURL) {
+  localStorage.setItem("mesa", mesaURL);
+}
+
 function enviarSolicitud(){
 
-const mesa =
-new URLSearchParams(window.location.search).get("mesa") || "0";
+const mesa = localStorage.getItem("mesa") || "0";
 
 fetch("https://script.google.com/macros/s/AKfycbxJpgRfDXjOgwfEVIjwauHur_qMk_NYSInFce1jQnpUiyevziteJDZw1Ra9jFE5Rro/exec?mesa="+mesa)
 .then(response => response.text())
