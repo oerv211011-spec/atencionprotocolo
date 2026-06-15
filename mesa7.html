@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Atención VIP - Mesa 7</title>
+
+<link rel="icon" href="assets/logo-lap.png">
+<link rel="apple-touch-icon" href="assets/logo-lap.png">
+<link rel="manifest" href="manifest.json">
+
+<style>
+
+body{
+font-family:Arial;
+background:#000;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+flex-direction:column;
+}
+
+button{
+width:350px;
+height:350px;
+font-size:40px;
+border-radius:50%;
+border:none;
+background:#d4af37;
+color:black;
+font-weight:bold;
+cursor:pointer;
+}
+
+#mensaje{
+margin-top:30px;
+font-size:24px;
+color:#00ff88;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<button onclick="enviarSolicitud()">
+🔔<br>ATENCIÓN
+</button>
+
+<div id="mensaje"></div>
+
+<script>
+
+const mesa = 7;
+
+function enviarSolicitud(){
+
+fetch("https://script.google.com/macros/s/AKfycbxJpgRfDXjOgwfEVIjwauHur_qMk_NYSInFce1jQnpUiyevziteJDZw1Ra9jFE5Rro/exec?mesa="+mesa)
+.then(response => response.text())
+.then(data => {
+
+document.getElementById("mensaje").innerHTML =
+"✓ Solicitud enviada (Mesa 7)";
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
