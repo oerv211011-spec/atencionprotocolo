@@ -5,6 +5,7 @@
 <title>Atención VIP</title>
 
 <style>
+
 body{
 font-family:Arial;
 background:#000;
@@ -14,6 +15,7 @@ justify-content:center;
 align-items:center;
 height:100vh;
 margin:0;
+flex-direction:column;
 }
 
 button{
@@ -25,18 +27,48 @@ border:none;
 background:#d4af37;
 color:black;
 font-weight:bold;
+cursor:pointer;
 }
+
+#mensaje{
+margin-top:30px;
+font-size:24px;
+color:#00ff88;
+}
+
 </style>
 
 </head>
 
 <body>
 
-<button onclick="alert('Solicitud enviada')">
+<button onclick="enviarSolicitud()">
 🔔
 <br>
 ATENCIÓN
 </button>
+
+<div id="mensaje"></div>
+
+<script>
+
+function enviarSolicitud(){
+
+const mesa =
+new URLSearchParams(window.location.search).get("mesa") || "0";
+
+fetch("https://script.google.com/macros/s/AKfycbxJpgRfDXjOgwfEVIjwauHur_qMk_NYSInFce1jQnpUiyevziteJDZw1Ra9jFE5Rro/exec?mesa="+mesa)
+.then(response => response.text())
+.then(data => {
+
+document.getElementById("mensaje").innerHTML =
+"✓ Solicitud enviada";
+
+});
+
+}
+
+</script>
 
 </body>
 </html>
