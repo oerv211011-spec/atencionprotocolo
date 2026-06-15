@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Atención VIP</title>
+
 <link rel="icon" href="assets/logo-lap.png">
 <link rel="apple-touch-icon" href="assets/logo-lap.png">
 <link rel="manifest" href="manifest.json">
+
 <style>
 
 body{
@@ -45,8 +47,7 @@ color:#00ff88;
 <body>
 
 <button onclick="enviarSolicitud()">
-🔔
-<br>
+🔔<br>
 ATENCIÓN
 </button>
 
@@ -54,24 +55,24 @@ ATENCIÓN
 
 <script>
 
-// 🔵 SE EJECUTA AL ABRIR LA APP
-const params = new URLSearchParams(window.location.search);
-const mesaURL = params.get("mesa");
-
-if (mesaURL) {
-  localStorage.setItem("mesa", mesaURL);
-}
-
 function enviarSolicitud(){
 
-const mesa = localStorage.getItem("mesa") || "0";
+// 🔵 OBTENER MESA DEL DISPOSITIVO
+const mesa = localStorage.getItem("mesa");
 
+if (!mesa) {
+  document.getElementById("mensaje").innerHTML =
+  "⚠ Mesa no configurada en este dispositivo";
+  return;
+}
+
+// 🔵 ENVIAR A GOOGLE SCRIPT
 fetch("https://script.google.com/macros/s/AKfycbxJpgRfDXjOgwfEVIjwauHur_qMk_NYSInFce1jQnpUiyevziteJDZw1Ra9jFE5Rro/exec?mesa="+mesa)
 .then(response => response.text())
 .then(data => {
 
 document.getElementById("mensaje").innerHTML =
-"✓ Solicitud enviada";
+"✓ Solicitud enviada (Mesa " + mesa + ")";
 
 });
 
