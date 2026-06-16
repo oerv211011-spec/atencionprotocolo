@@ -73,6 +73,11 @@ button{
   transition: all 0.2s ease;
   animation: pulse 2.5s infinite;
 
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 30px;
+  letter-spacing: 3px;
+
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -124,35 +129,36 @@ button:active{
   display:block;
   font-size:65px;
   margin-bottom:15px;
-  text-shadow: 0 0 18px rgba(255,244,214,0.55);
 }
 
-/* TEXTO BOTÓN (NO TOCADO) */
+/* TEXTO */
 .texto-boton{
-  font-size: 30px;
   font-weight: 800;
-  letter-spacing: 3px;
-  line-height: 1.3;
 }
 
-/* MENSAJE VERDE ORIGINAL + ANIMACIÓN AÑADIDA */
+/* MENSAJE VERDE (INTACTO) */
 #mensaje{
   margin-top: 30px;
   font-size: 18px;
-  color: #00ff88; /* NO CAMBIADO */
+  color: #00ff88;
   text-align: center;
   font-weight: 600;
   min-height: 20px;
-
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.4s ease;
 }
 
-/* aparece suave */
-#mensaje.show{
-  opacity: 1;
-  transform: translateY(0);
+/* ANIMACIÓN DE PUNTOS */
+.dots::after{
+  content:'';
+  display:inline-block;
+  animation: dots 1.2s infinite;
+}
+
+@keyframes dots{
+  0%   { content:''; }
+  25%  { content:'.'; }
+  50%  { content:'..'; }
+  75%  { content:'...'; }
+  100% { content:''; }
 }
 
 /* LOGO */
@@ -177,8 +183,7 @@ button:active{
 
 <div id="mensaje"></div>
 
-<img src="assets/logo-alturas-transparente.png"
-class="logo-vip">
+<img src="assets/logo-alturas-transparente.png" class="logo-vip">
 
 <script>
 
@@ -192,17 +197,17 @@ function enviarSolicitud(){
 
   const msg = document.getElementById("mensaje");
 
-  msg.classList.add("show");
-  msg.innerHTML = "Enviando solicitud...";
+  msg.classList.add("dots");
+  msg.innerHTML = "Enviando solicitud";
 
   fetch("https://script.google.com/macros/s/AKfycbxU5N9gvYgnr6ziPolPuPircfFdsRzLgCfVqntC8WGwZ-wath6i5o1dUuAfPFcBVJh2/exec?mesa=" + mesa)
 
   .then(() => {
 
+    msg.classList.remove("dots");
     msg.innerHTML = "✔ Personal notificado";
 
     setTimeout(() => {
-      msg.classList.remove("show");
       msg.innerHTML = "";
     }, 3000);
 
@@ -212,10 +217,10 @@ function enviarSolicitud(){
 
   .catch(() => {
 
+    msg.classList.remove("dots");
     msg.innerHTML = "❌ Error de conexión";
 
     setTimeout(() => {
-      msg.classList.remove("show");
       msg.innerHTML = "";
     }, 3000);
 
