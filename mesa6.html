@@ -8,7 +8,8 @@
 <link rel="apple-touch-icon" href="assets/logo-lap.png">
 <link rel="manifest" href="manifest.json">
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<!-- 🔥 FUENTES (AGREGADA PLAYFAIR) -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
 
 <style>
 
@@ -131,12 +132,18 @@ button:active{
   margin-bottom:15px;
 }
 
-/* TEXTO */
+/* ✨ TEXTO MEJORADO (SOLO AQUÍ CAMBIA TIPOGRAFÍA) */
 .texto-boton{
   font-weight: 800;
 }
 
-/* MENSAJE VERDE (INTACTO) */
+/* 🔥 SOLO “SOLICITAR” SERIF ELEGANTE */
+.texto-boton span:first-child{
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+}
+
+/* MENSAJE */
 #mensaje{
   margin-top: 30px;
   font-size: 18px;
@@ -176,12 +183,17 @@ button:active{
 
 <body>
 
-<!-- 🔔 SONIDO VIP (AGREGADO) -->
 <audio id="sonidoVip" src="assets/campana-vip.mp3" preload="auto"></audio>
 
 <button onclick="enviarSolicitud()">
   <span class="campana">🛎️</span>
-  <span class="texto-boton">SOLICITAR<br>ASISTENCIA</span>
+
+  <!-- 🔥 SOLO CAMBIO TIPOGRÁFICO -->
+  <span class="texto-boton">
+    <span>SOLICITAR</span>
+    <br>
+    ASISTENCIA
+  </span>
 </button>
 
 <div id="mensaje"></div>
@@ -200,7 +212,6 @@ function enviarSolicitud(){
 
   const msg = document.getElementById("mensaje");
 
-  // 🔔 SONIDO VIP (AGREGADO)
   const audio = document.getElementById("sonidoVip");
   audio.currentTime = 0;
   audio.play().catch(()=>{});
