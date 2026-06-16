@@ -176,6 +176,9 @@ button:active{
 
 <body>
 
+<!-- 🔔 SONIDO VIP (AGREGADO) -->
+<audio id="sonidoVip" src="assets/campana-vip.mp3" preload="auto"></audio>
+
 <button onclick="enviarSolicitud()">
   <span class="campana">🛎️</span>
   <span class="texto-boton">SOLICITAR<br>ASISTENCIA</span>
@@ -197,6 +200,11 @@ function enviarSolicitud(){
 
   const msg = document.getElementById("mensaje");
 
+  // 🔔 SONIDO VIP (AGREGADO)
+  const audio = document.getElementById("sonidoVip");
+  audio.currentTime = 0;
+  audio.play().catch(()=>{});
+
   msg.classList.add("dots");
   msg.innerHTML = "Enviando solicitud";
 
@@ -209,7 +217,7 @@ function enviarSolicitud(){
 
     setTimeout(() => {
       msg.innerHTML = "";
-      enviando = false; // 🔥 desbloquea aquí (correcto)
+      enviando = false;
     }, 3000);
 
   })
@@ -221,7 +229,7 @@ function enviarSolicitud(){
 
     setTimeout(() => {
       msg.innerHTML = "";
-      enviando = false; // 🔥 también aquí
+      enviando = false;
     }, 3000);
 
   });
