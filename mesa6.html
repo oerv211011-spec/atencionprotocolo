@@ -149,7 +149,16 @@ button:active{
   font-weight: 500;
   min-height: 20px;
 }
+.campana{
+  display:block;
+  font-size:85px;
+  line-height:1;
+  margin-bottom:18px;
 
+  text-shadow:
+    0 0 8px rgba(255,255,255,0.5),
+    0 0 18px rgba(212,175,55,0.45);
+}
 </style>
 
 </head>
@@ -157,11 +166,13 @@ button:active{
 <body>
 
 <button onclick="enviarSolicitud()">
-🛎️
-<br><br>
+
+<span class="campana">🛎️</span>
+
 SOLICITAR
 <br>
 ASISTENCIA
+
 </button>
 
 <div id="mensaje"></div>
