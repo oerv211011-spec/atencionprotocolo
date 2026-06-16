@@ -209,9 +209,8 @@ function enviarSolicitud(){
 
     setTimeout(() => {
       msg.innerHTML = "";
+      enviando = false; // 🔥 desbloquea aquí (correcto)
     }, 3000);
-
-    enviando = false;
 
   })
 
@@ -222,9 +221,8 @@ function enviarSolicitud(){
 
     setTimeout(() => {
       msg.innerHTML = "";
+      enviando = false; // 🔥 también aquí
     }, 3000);
-
-    enviando = false;
 
   });
 
