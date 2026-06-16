@@ -134,11 +134,9 @@ button:active{
 /* TEXTO */
 .texto-boton{
   font-weight: 800;
-  font-size: 26px;
-
 }
 
-/* MENSAJE VERDE (INTACTO) */
+/* MENSAJE VERDE */
 #mensaje{
   margin-top: 30px;
   font-size: 18px;
@@ -178,6 +176,9 @@ button:active{
 
 <body>
 
+<!-- 🔔 AUDIO AGREGADO -->
+<audio id="sonidoVip" src="assets/campana-vip.mp3" preload="auto"></audio>
+
 <button onclick="enviarSolicitud()">
   <span class="campana">🛎️</span>
   <span class="texto-boton">SOLICITAR<br>ASISTENCIA</span>
@@ -197,6 +198,11 @@ function enviarSolicitud(){
   if(enviando) return;
   enviando = true;
 
+  // 🔔 SONIDO RESTAURADO
+  const audio = document.getElementById("sonidoVip");
+  audio.currentTime = 0;
+  audio.play().catch(()=>{});
+
   const msg = document.getElementById("mensaje");
 
   msg.classList.add("dots");
@@ -211,7 +217,7 @@ function enviarSolicitud(){
 
     setTimeout(() => {
       msg.innerHTML = "";
-      enviando = false; // 🔥 desbloquea aquí (correcto)
+      enviando = false;
     }, 3000);
 
   })
@@ -223,7 +229,7 @@ function enviarSolicitud(){
 
     setTimeout(() => {
       msg.innerHTML = "";
-      enviando = false; // 🔥 también aquí
+      enviando = false;
     }, 3000);
 
   });
