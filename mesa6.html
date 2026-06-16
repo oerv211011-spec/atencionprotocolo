@@ -8,8 +8,7 @@
 <link rel="apple-touch-icon" href="assets/logo-lap.png">
 <link rel="manifest" href="manifest.json">
 
-<!-- 🔥 FUENTES (AGREGADA PLAYFAIR) -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
 
 <style>
 
@@ -132,22 +131,16 @@ button:active{
   margin-bottom:15px;
 }
 
-/* ✨ TEXTO MEJORADO (SOLO AQUÍ CAMBIA TIPOGRAFÍA) */
+/* TEXTO */
 .texto-boton{
   font-weight: 800;
 }
 
-/* 🔥 SOLO “SOLICITAR” SERIF ELEGANTE */
-.texto-boton span:first-child{
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-}
-
-/* MENSAJE */
+/* MENSAJE VERDE (INTACTO) */
 #mensaje{
   margin-top: 30px;
   font-size: 18px;
-  color: #ffffff;
+  color: #00ff88;
   text-align: center;
   font-weight: 600;
   min-height: 20px;
@@ -183,17 +176,9 @@ button:active{
 
 <body>
 
-<audio id="sonidoVip" src="assets/campana-vip.mp3" preload="auto"></audio>
-
 <button onclick="enviarSolicitud()">
   <span class="campana">🛎️</span>
-
-  <!-- 🔥 SOLO CAMBIO TIPOGRÁFICO -->
-  <span class="texto-boton">
-    <span>SOLICITAR</span>
-    <br>
-    ASISTENCIA
-  </span>
+  <span class="texto-boton">SOLICITAR<br>ASISTENCIA</span>
 </button>
 
 <div id="mensaje"></div>
@@ -212,10 +197,6 @@ function enviarSolicitud(){
 
   const msg = document.getElementById("mensaje");
 
-  const audio = document.getElementById("sonidoVip");
-  audio.currentTime = 0;
-  audio.play().catch(()=>{});
-
   msg.classList.add("dots");
   msg.innerHTML = "Enviando solicitud";
 
@@ -228,7 +209,7 @@ function enviarSolicitud(){
 
     setTimeout(() => {
       msg.innerHTML = "";
-      enviando = false;
+      enviando = false; // 🔥 desbloquea aquí (correcto)
     }, 3000);
 
   })
@@ -240,7 +221,7 @@ function enviarSolicitud(){
 
     setTimeout(() => {
       msg.innerHTML = "";
-      enviando = false;
+      enviando = false; // 🔥 también aquí
     }, 3000);
 
   });
