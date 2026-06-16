@@ -8,64 +8,231 @@
 <link rel="apple-touch-icon" href="assets/logo-lap.png">
 <link rel="manifest" href="manifest.json">
 
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+
 <style>
 
 body{
-font-family:Arial;
-background:#000;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-margin:0;
-flex-direction:column;
+  font-family: 'Montserrat', sans-serif;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
+/* Fondo VIP */
+body::before{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background:
+    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+    url('assets/salon-vip.jpeg');
+
+  background-size: cover;
+  background-position: 40% center;
+  background-repeat: no-repeat;
+
+  filter: blur(8px) brightness(0.55);
+  transform: scale(1.10);
+  z-index:-1;
+}
+
+/* BOTÓN VIP (NO TOCADO) */
 button{
-width:350px;
-height:350px;
-font-size:40px;
-border-radius:50%;
-border:none;
-background:#d4af37;
-color:black;
-font-weight:bold;
-cursor:pointer;
+  position: relative;
+
+  width: 340px;
+  height: 340px;
+
+  border-radius: 50%;
+  border: 3px solid rgba(255,244,214,0.45);
+
+  background:
+    radial-gradient(circle at 30% 30%,
+    #fff4d6 0%,
+    #d6b56d 20%,
+    #9d7a35 55%,
+    #5b451d 100%);
+
+  color: #1a1a1a;
+  cursor: pointer;
+
+  box-shadow:
+    inset 0 8px 15px rgba(255,255,255,0.35),
+    inset 0 -12px 20px rgba(0,0,0,0.25),
+    0 15px 40px rgba(0,0,0,0.6),
+    0 0 25px rgba(212,175,55,0.25);
+
+  transition: all 0.2s ease;
+  animation: pulse 2.5s infinite;
+
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 30px;
+  letter-spacing: 3px;
+
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
+/* aro exterior */
+button::before{
+  content:'';
+  position:absolute;
+  top:-12px;
+  left:-12px;
+  width:360px;
+  height:360px;
+  border-radius:50%;
+  border:1px solid rgba(255,244,214,0.40);
+}
+
+/* click */
+button:active{
+  transform: translateY(4px) scale(0.97);
+}
+
+/* pulso */
+@keyframes pulse{
+  0%{
+    box-shadow:
+      inset 0 8px 15px rgba(255,255,255,0.35),
+      inset 0 -12px 20px rgba(0,0,0,0.25),
+      0 15px 40px rgba(0,0,0,0.6),
+      0 0 0 0 rgba(255,244,214,0.35);
+  }
+  70%{
+    box-shadow:
+      inset 0 8px 15px rgba(255,255,255,0.35),
+      inset 0 -12px 20px rgba(0,0,0,0.25),
+      0 15px 40px rgba(0,0,0,0.6),
+      0 0 0 30px rgba(255,244,214,0);
+  }
+  100%{
+    box-shadow:
+      inset 0 8px 15px rgba(255,255,255,0.35),
+      inset 0 -12px 20px rgba(0,0,0,0.25),
+      0 15px 40px rgba(0,0,0,0.6),
+      0 0 0 0 rgba(212,175,55,0);
+  }
+}
+
+/* CAMPANA */
+.campana{
+  display:block;
+  font-size:65px;
+  margin-bottom:15px;
+}
+
+/* TEXTO */
+.texto-boton{
+  font-weight: 800;
+}
+
+/* MENSAJE VERDE */
 #mensaje{
-margin-top:30px;
-font-size:24px;
-color:#00ff88;
+  margin-top: 30px;
+  font-size: 18px;
+  color: #ffffff;
+  text-align: center;
+  font-weight: 600;
+  min-height: 20px;
+}
+
+/* ANIMACIÓN DE PUNTOS */
+.dots::after{
+  content:'';
+  display:inline-block;
+  animation: dots 1.2s infinite;
+}
+
+@keyframes dots{
+  0%   { content:''; }
+  25%  { content:'.'; }
+  50%  { content:'..'; }
+  75%  { content:'...'; }
+  100% { content:''; }
+}
+
+/* LOGO */
+.logo-vip{
+  position: fixed;
+  bottom: 25px;
+  right: 15px;
+  width: 450px;
+  opacity: 0.65;
+  pointer-events: none;
 }
 
 </style>
-
 </head>
 
 <body>
 
+<!-- 🔔 AUDIO AGREGADO -->
+<audio id="sonidoVip" src="assets/campana-vip.mp3" preload="auto"></audio>
+
 <button onclick="enviarSolicitud()">
-🔔<br>ATENCIÓN
+  <span class="campana">🛎️</span>
+  <span class="texto-boton">SOLICITAR<br>ASISTENCIA</span>
 </button>
 
 <div id="mensaje"></div>
 
+<img src="assets/logo-alturas-transparente.png" class="logo-vip">
+
 <script>
 
 const mesa = 5;
+let enviando = false;
 
 function enviarSolicitud(){
 
-fetch("https://script.google.com/macros/s/AKfycbxU5N9gvYgnr6ziPolPuPircfFdsRzLgCfVqntC8WGwZ-wath6i5o1dUuAfPFcBVJh2/exec?mesa="+mesa)
-.then(response => response.text())
-.then(data => {
+  if(enviando) return;
+  enviando = true;
 
-document.getElementById("mensaje").innerHTML =
-"✓ Solicitud enviada (Mesa 5)";
+  // 🔔 SONIDO RESTAURADO
+  const audio = document.getElementById("sonidoVip");
+  audio.currentTime = 0;
+  audio.play().catch(()=>{});
 
-});
+  const msg = document.getElementById("mensaje");
+
+  msg.classList.add("dots");
+  msg.innerHTML = "Enviando solicitud";
+
+  fetch("https://script.google.com/macros/s/AKfycbxU5N9gvYgnr6ziPolPuPircfFdsRzLgCfVqntC8WGwZ-wath6i5o1dUuAfPFcBVJh2/exec?mesa=" + mesa)
+
+  .then(() => {
+
+    msg.classList.remove("dots");
+    msg.innerHTML = "✔ Personal notificado";
+
+    setTimeout(() => {
+      msg.innerHTML = "";
+      enviando = false;
+    }, 3000);
+
+  })
+
+  .catch(() => {
+
+    msg.classList.remove("dots");
+    msg.innerHTML = "❌ Error de conexión";
+
+    setTimeout(() => {
+      msg.innerHTML = "";
+      enviando = false;
+    }, 3000);
+
+  });
 
 }
 
