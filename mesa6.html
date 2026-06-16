@@ -95,7 +95,34 @@ button::before{
   border-radius:50%;
   border:1px solid rgba(255,244,214,0.40);
 }
+button::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:50%;
 
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255,255,255,0.25) 50%,
+    transparent 70%
+  );
+
+  transform: translateX(-120%) rotate(25deg);
+  animation: shine 4s infinite;
+  pointer-events: none;
+}
+  @keyframes shine{
+  0%{
+    transform: translateX(-120%) rotate(25deg);
+  }
+  50%{
+    transform: translateX(120%) rotate(25deg);
+  }
+  100%{
+    transform: translateX(120%) rotate(25deg);
+  }
+}
 /* efecto click */
 button:active{
   transform: translateY(4px) scale(0.97);
