@@ -32,8 +32,10 @@ body::before{
   inset:0;
 
   background:
-  linear-gradient(rgba(0,0,0,0.68), rgba(0,0,0,0.68)),
-  url('assets/salon-vip.jpeg');
+    radial-gradient(circle at 50% 40%, rgba(255,244,214,0.10), transparent 55%),
+    radial-gradient(circle at 20% 80%, rgba(241,213,138,0.08), transparent 60%),
+    linear-gradient(rgba(0,0,0,0.68), rgba(0,0,0,0.68)),
+    url('assets/salon-vip.jpeg');
 
   background-size: cover;
   background-position: 40% center;
@@ -41,7 +43,8 @@ body::before{
 
   filter: blur(8px) brightness(0.55);
   transform: scale(1.10);
-  z-index:-1;
+
+  z-index: -1;
 }
 
 /* BOTÓN VIP (NO TOCADO) */
