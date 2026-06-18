@@ -32,7 +32,9 @@ body::before{
   inset:0;
 
   background:
-    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+    radial-gradient(circle at 50% 40%, rgba(255,244,214,0.10), transparent 55%),
+    radial-gradient(circle at 20% 80%, rgba(241,213,138,0.08), transparent 60%),
+    linear-gradient(rgba(0,0,0,0.68), rgba(0,0,0,0.68)),
     url('assets/salon-vip.jpeg');
 
   background-size: cover;
@@ -41,36 +43,46 @@ body::before{
 
   filter: blur(8px) brightness(0.55);
   transform: scale(1.10);
-  z-index:-1;
+
+  z-index: -1;
 }
 
 /* BOTÓN VIP (NO TOCADO) */
 button{
+
+  display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
   position: relative;
 
   width: 340px;
   height: 340px;
 
   border-radius: 50%;
-  border: 3px solid rgba(255,244,214,0.45);
+  border: 1.5px solid rgba(255,244,214,0.35);
 
   background:
-    radial-gradient(circle at 30% 30%,
-    #fff4d6 0%,
-    #d6b56d 20%,
-    #9d7a35 55%,
-    #5b451d 100%);
+radial-gradient(circle at 30% 25%,
+#fff9e8 0%,
+#e6c777 18%,
+#c79f43 45%,
+#8c6624 75%,
+#4a3614 100%);
 
   color: #1a1a1a;
   cursor: pointer;
 
   box-shadow:
-    inset 0 8px 15px rgba(255,255,255,0.35),
-    inset 0 -12px 20px rgba(0,0,0,0.25),
-    0 15px 40px rgba(0,0,0,0.6),
-    0 0 25px rgba(212,175,55,0.25);
+  inset 0 10px 18px rgba(255,255,255,0.22),
+  inset 0 -14px 22px rgba(0,0,0,0.32),
+  0 20px 50px rgba(0,0,0,0.70),
+  0 0 18px rgba(212,175,55,0.12);
 
-  transition: all 0.2s ease;
+transition: transform 0.18s cubic-bezier(0.2, 0.9, 0.2, 1),
+            box-shadow 0.18s ease,
+            filter 0.18s ease;
   animation: pulse 2.5s infinite;
 
   font-family: 'Montserrat', sans-serif;
@@ -82,8 +94,8 @@ button{
   -webkit-tap-highlight-color: transparent;
 }
 
-/* aro exterior */
-button::before{
+/* aro exterior SOLO para el botón principal */
+button:not(.idioma-btn)::before{
   content:'';
   position:absolute;
   top:-12px;
@@ -95,10 +107,24 @@ button::before{
 }
 
 /* click */
-button:active{
-  transform: translateY(4px) scale(0.97);
+button:hover{
+  transform: translateY(-1.5px);
 }
 
+button:active{
+  transform: translateY(8px) scale(0.955);
+  
+  box-shadow:
+    inset 0 6px 14px rgba(255,255,255,0.18),
+    inset 0 -18px 25px rgba(0,0,0,0.45),
+    0 8px 20px rgba(0,0,0,0.55),
+    0 0 8px rgba(212,175,55,0.10);
+
+  filter: brightness(0.92) contrast(1.05);
+}
+  button:focus{
+  outline: none;
+}
 /* pulso */
 @keyframes pulse{
   0%{
@@ -126,24 +152,52 @@ button:active{
 
 /* CAMPANA */
 .campana{
-  display:block;
-  font-size:65px;
+  display: inline-block;   /* IMPORTANTE */
+  font-size:52px;
   margin-bottom:15px;
+  opacity:0.95;
+  line-height:1;
+  text-shadow:0 2px 10px rgba(0,0,0,0.25);
+
+  transform-origin: top center; /* punto de giro */
+}
+  .campana-sonando{
+  animation: sonarCampana 0.8s ease;
+}
+
+@keyframes sonarCampana{
+  0%   { transform: rotate(0deg); }
+  10%  { transform: rotate(-20deg); }
+  20%  { transform: rotate(20deg); }
+  30%  { transform: rotate(-18deg); }
+  40%  { transform: rotate(18deg); }
+  50%  { transform: rotate(-14deg); }
+  60%  { transform: rotate(14deg); }
+  70%  { transform: rotate(-8deg); }
+  80%  { transform: rotate(8deg); }
+  100% { transform: rotate(0deg); }
 }
 
 /* TEXTO */
 .texto-boton{
   font-weight: 800;
+  font-size: 24px;
+  letter-spacing: 3px;
+  line-height: 1.15;
+  text-transform: uppercase;
+  text-align: center;
+  opacity: 0.95;
 }
 
-/* MENSAJE VERDE */
+/* MENSAJE */
 #mensaje{
   margin-top: 30px;
-  font-size: 18px;
+  font-size: 20px;
   color: #ffffff;
   text-align: center;
   font-weight: 600;
-  min-height: 20px;
+  line-height: 1.6;
+  min-height: 50px;
 }
 
 /* ANIMACIÓN DE PUNTOS */
@@ -159,6 +213,113 @@ button:active{
   50%  { content:'..'; }
   75%  { content:'...'; }
   100% { content:''; }
+}
+#pantallaIdioma{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+
+  width:100%;
+  max-width:500px;
+  padding:20px;
+
+  opacity:1;
+  transition: opacity .5s ease;
+}
+#pantallaPrincipal{
+  opacity:1;
+  transition: opacity .5s ease;
+}
+.titulo-bienvenida{
+  font-size:34px;
+  font-weight:800;
+  letter-spacing:4px;
+  color:#f1d58a;
+  margin-bottom:25px;
+  text-shadow:0 0 20px rgba(241,213,138,0.3);
+}
+
+.texto-bienvenida{
+  font-size:38px;
+  font-weight:800;
+  letter-spacing:2px;
+  margin-bottom:18px;
+  color:white;
+  text-shadow:0 0 25px rgba(255,255,255,0.15);
+}
+
+.texto-seleccion{
+  font-size:17px;
+  margin-bottom:35px;
+  line-height:1.8;
+  color:rgba(255,255,255,0.75);
+}
+
+.idioma-btn{
+border: 1px solid rgba(255,255,255,0.15);
+transition: all 0.25s ease;
+box-shadow:
+  inset 0 8px 15px rgba(255,255,255,0.35),
+  inset 0 -12px 20px rgba(0,0,0,0.25),
+  0 10px 25px rgba(0,0,0,0.5),
+  0 0 15px rgba(241,213,138,0.20);
+
+  transform: translateZ(0);
+will-change: transform;
+  
+  width:320px;
+  height:90px;
+
+  margin:15px;
+
+  border:none;
+  border-radius:18px;
+
+  background:
+    radial-gradient(circle at 30% 30%,
+    #fff4d6 0%,
+    #d6b56d 20%,
+    #9d7a35 55%,
+    #5b451d 100%);
+
+  color:#1a1a1a;
+
+  font-family:'Montserrat',sans-serif;
+  font-size:26px;
+  font-weight:800;
+  letter-spacing:2px;
+
+  cursor:pointer;
+
+  box-shadow:
+    inset 0 8px 15px rgba(255,255,255,0.35),
+    inset 0 -12px 20px rgba(0,0,0,0.25),
+    0 10px 25px rgba(0,0,0,0.5);
+
+  transition:all .2s ease;
+}
+
+.idioma-btn:active{
+  transform:scale(0.97);
+}
+
+  .idioma-btn:hover{
+  transform: translateY(-3px);
+}
+  
+  #volverIdioma{
+  margin-top:25px;
+  font-size:16px;
+  color:rgba(255,255,255,0.8);
+  cursor:pointer;
+  transition:.2s;
+  user-select:none;
+}
+
+#volverIdioma:hover{
+  color:#f1d58a;
 }
 
 /* LOGO */
@@ -176,15 +337,47 @@ button:active{
 
 <body>
 
-<!-- 🔔 AUDIO AGREGADO -->
+<!-- 🔔 AUDIO -->
 <audio id="sonidoVip" src="assets/campana-vip.mp3" preload="auto"></audio>
 
-<button onclick="enviarSolicitud()">
-  <span class="campana">🛎️</span>
-  <span class="texto-boton">SOLICITAR<br>ASISTENCIA</span>
-</button>
+<!-- PANTALLA DE IDIOMA -->
+<div id="pantallaIdioma">
+  <div class="texto-bienvenida">
+    Bienvenido<br>
+    Welcome
+  </div>
 
-<div id="mensaje"></div>
+  <div class="texto-seleccion">
+  🌍 Seleccione su idioma<br>
+  🌍 Select your language
+</div>
+  <button class="idioma-btn" onclick="seleccionarIdioma('es')">
+    ESPAÑOL
+  </button>
+
+  <button class="idioma-btn" onclick="seleccionarIdioma('en')">
+    ENGLISH
+  </button>
+
+</div>
+
+<!-- PANTALLA PRINCIPAL -->
+<div id="pantallaPrincipal" style="display:none; flex-direction:column; align-items:center;">
+
+  <button onclick="enviarSolicitud()">
+    <span class="campana">🛎️</span>
+    <span class="texto-boton">SOLICITAR<br>ASISTENCIA</span>
+  
+  </button>
+  
+
+  <div id="mensaje"></div>
+
+  <div id="volverIdioma" onclick="volverIdioma()">
+    🌐 Cambiar idioma
+  </div>
+
+</div>
 
 <img src="assets/logo-alturas-transparente.png" class="logo-vip">
 
@@ -193,39 +386,119 @@ button:active{
 const mesa = 6;
 let enviando = false;
 
+function seleccionarIdioma(idioma){
+
+  const idiomaDiv = document.getElementById("pantallaIdioma");
+  const principalDiv = document.getElementById("pantallaPrincipal");
+
+  const textoBoton = document.querySelector(".texto-boton");
+  const volver = document.getElementById("volverIdioma");
+
+  if(idioma === "en"){
+    textoBoton.innerHTML = "REQUEST<br>ASSISTANCE";
+    volver.innerHTML = "🌐 Change Language";
+  }else{
+    textoBoton.innerHTML = "SOLICITAR<br>ASISTENCIA";
+    volver.innerHTML = "🌐 Cambiar idioma";
+  }
+
+  idiomaDiv.style.opacity = "0";
+
+  setTimeout(() => {
+
+    idiomaDiv.style.display = "none";
+
+    principalDiv.style.display = "flex";
+
+    principalDiv.style.opacity = "0";
+
+    setTimeout(() => {
+      principalDiv.style.opacity = "1";
+    }, 50);
+
+  }, 500);
+
+}
+function volverIdioma(){
+
+  const idiomaDiv = document.getElementById("pantallaIdioma");
+  const principalDiv = document.getElementById("pantallaPrincipal");
+  const volver = document.getElementById("volverIdioma");
+
+  principalDiv.style.opacity = "0";
+
+  setTimeout(() => {
+
+    principalDiv.style.display = "none";
+
+    idiomaDiv.style.display = "flex";
+
+    idiomaDiv.style.opacity = "0";
+
+    setTimeout(() => {
+      idiomaDiv.style.opacity = "1";
+    }, 50);
+
+  }, 500);
+
+}
 function enviarSolicitud(){
 
   if(enviando) return;
   enviando = true;
 
-  // 🔔 SONIDO RESTAURADO
   const audio = document.getElementById("sonidoVip");
   audio.currentTime = 0;
   audio.play().catch(()=>{});
+  const campana = document.querySelector(".campana");
+
+campana.classList.remove("campana-sonando");
+void campana.offsetWidth; // reinicia animación
+campana.classList.add("campana-sonando");
 
   const msg = document.getElementById("mensaje");
 
   msg.classList.add("dots");
-  msg.innerHTML = "Enviando solicitud";
+
+  if(document.querySelector(".texto-boton").innerHTML.includes("REQUEST")){
+    msg.innerHTML = "Sending request";
+  }else{
+    msg.innerHTML = "Enviando solicitud";
+  }
 
   fetch("https://script.google.com/macros/s/AKfycbxU5N9gvYgnr6ziPolPuPircfFdsRzLgCfVqntC8WGwZ-wath6i5o1dUuAfPFcBVJh2/exec?mesa=" + mesa)
 
   .then(() => {
 
     msg.classList.remove("dots");
-    msg.innerHTML = "✔ Personal notificado";
 
-    setTimeout(() => {
-      msg.innerHTML = "";
-      enviando = false;
-    }, 3000);
+    if(document.querySelector(".texto-boton").innerHTML.includes("REQUEST")){
+  msg.innerHTML = "✨ Thank you.<br>Our staff will assist you shortly.";
+}else{
+  msg.innerHTML = "✨ Gracias.<br>Nuestro personal acudirá en breve.";
+}
+
+   setTimeout(() => {
+
+  msg.innerHTML = "";
+
+  volverIdioma();
+
+  enviando = false;
+
+}, 5000);
 
   })
 
   .catch(() => {
 
     msg.classList.remove("dots");
-    msg.innerHTML = "❌ Error de conexión";
+
+    if(document.querySelector(".texto-boton").innerHTML.includes("REQUEST")){
+      msg.innerHTML = "❌ Connection error";
+    }else{
+      msg.innerHTML = "❌ Error de conexión";
+    }
 
     setTimeout(() => {
       msg.innerHTML = "";
