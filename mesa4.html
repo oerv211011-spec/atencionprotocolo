@@ -229,6 +229,19 @@ button:active{
 .idioma-btn:active{
   transform:scale(0.97);
 }
+  #volverIdioma{
+  margin-top:25px;
+  font-size:16px;
+  color:rgba(255,255,255,0.8);
+  cursor:pointer;
+  transition:.2s;
+  user-select:none;
+}
+
+#volverIdioma:hover{
+  color:#f1d58a;
+}
+
 /* LOGO */
 .logo-vip{
   position: fixed;
@@ -284,6 +297,10 @@ button:active{
 
   <div id="mensaje"></div>
 
+</div><div id="mensaje"></div>
+
+<div id="volverIdioma" onclick="volverIdioma()">
+  🌐 Cambiar idioma
 </div>
 
 <img src="assets/logo-alturas-transparente.png" class="logo-vip">
@@ -307,7 +324,13 @@ function seleccionarIdioma(idioma){
   }
 
 }
+function volverIdioma(){
 
+  document.getElementById("pantallaPrincipal").style.display = "none";
+
+  document.getElementById("pantallaIdioma").style.display = "flex";
+
+}
 function enviarSolicitud(){
 
   if(enviando) return;
@@ -339,10 +362,17 @@ function enviarSolicitud(){
       msg.innerHTML = "✔ Personal notificado";
     }
 
-    setTimeout(() => {
-      msg.innerHTML = "";
-      enviando = false;
-    }, 3000);
+   setTimeout(() => {
+
+  msg.innerHTML = "";
+
+  document.getElementById("pantallaPrincipal").style.display = "none";
+
+  document.getElementById("pantallaIdioma").style.display = "flex";
+
+  enviando = false;
+
+}, 10000);
 
   })
 
