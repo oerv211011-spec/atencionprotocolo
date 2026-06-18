@@ -167,8 +167,14 @@ button:active{
   align-items:center;
   justify-content:center;
   text-align:center;
-}
 
+  opacity:1;
+  transition: opacity .5s ease;
+}
+#pantallaPrincipal{
+  opacity:1;
+  transition: opacity .5s ease;
+}
 .titulo-bienvenida{
   font-size:34px;
   font-weight:800;
@@ -312,8 +318,8 @@ let enviando = false;
 
 function seleccionarIdioma(idioma){
 
-  document.getElementById("pantallaIdioma").style.display = "none";
-  document.getElementById("pantallaPrincipal").style.display = "flex";
+  const idiomaDiv = document.getElementById("pantallaIdioma");
+  const principalDiv = document.getElementById("pantallaPrincipal");
 
   const textoBoton = document.querySelector(".texto-boton");
 
@@ -323,12 +329,43 @@ function seleccionarIdioma(idioma){
     textoBoton.innerHTML = "SOLICITAR<br>ASISTENCIA";
   }
 
+  idiomaDiv.style.opacity = "0";
+
+  setTimeout(() => {
+
+    idiomaDiv.style.display = "none";
+
+    principalDiv.style.display = "flex";
+
+    principalDiv.style.opacity = "0";
+
+    setTimeout(() => {
+      principalDiv.style.opacity = "1";
+    }, 50);
+
+  }, 500);
+
 }
 function volverIdioma(){
 
-  document.getElementById("pantallaPrincipal").style.display = "none";
+  const idiomaDiv = document.getElementById("pantallaIdioma");
+  const principalDiv = document.getElementById("pantallaPrincipal");
 
-  document.getElementById("pantallaIdioma").style.display = "flex";
+  principalDiv.style.opacity = "0";
+
+  setTimeout(() => {
+
+    principalDiv.style.display = "none";
+
+    idiomaDiv.style.display = "flex";
+
+    idiomaDiv.style.opacity = "0";
+
+    setTimeout(() => {
+      idiomaDiv.style.opacity = "1";
+    }, 50);
+
+  }, 500);
 
 }
 function enviarSolicitud(){
