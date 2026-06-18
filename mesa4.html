@@ -177,15 +177,47 @@ button:active{
 
 <body>
 
-<!-- 🔔 AUDIO AGREGADO -->
+<!-- 🔔 AUDIO -->
 <audio id="sonidoVip" src="assets/campana-vip.mp3" preload="auto"></audio>
 
-<button onclick="enviarSolicitud()">
-  <span class="campana">🛎️</span>
-  <span class="texto-boton">SOLICITAR<br>ASISTENCIA</span>
-</button>
+<!-- PANTALLA DE IDIOMA -->
+<div id="pantallaIdioma">
 
-<div id="mensaje"></div>
+  <div class="titulo-bienvenida">
+    ALTURAS VIP LOUNGE
+  </div>
+
+  <div class="texto-bienvenida">
+    Bienvenido<br>
+    Welcome
+  </div>
+
+  <div class="texto-seleccion">
+    Seleccione su idioma<br>
+    Select your language
+  </div>
+
+  <button class="idioma-btn" onclick="seleccionarIdioma('es')">
+    ESPAÑOL
+  </button>
+
+  <button class="idioma-btn" onclick="seleccionarIdioma('en')">
+    ENGLISH
+  </button>
+
+</div>
+
+<!-- PANTALLA PRINCIPAL -->
+<div id="pantallaPrincipal" style="display:none; flex-direction:column; align-items:center;">
+
+  <button onclick="enviarSolicitud()">
+    <span class="campana">🛎️</span>
+    <span class="texto-boton">SOLICITAR<br>ASISTENCIA</span>
+  </button>
+
+  <div id="mensaje"></div>
+
+</div>
 
 <img src="assets/logo-alturas-transparente.png" class="logo-vip">
 
@@ -194,12 +226,26 @@ button:active{
 const mesa = 4;
 let enviando = false;
 
+function seleccionarIdioma(idioma){
+
+  document.getElementById("pantallaIdioma").style.display = "none";
+  document.getElementById("pantallaPrincipal").style.display = "flex";
+
+  const textoBoton = document.querySelector(".texto-boton");
+
+  if(idioma === "en"){
+    textoBoton.innerHTML = "REQUEST<br>ASSISTANCE";
+  }else{
+    textoBoton.innerHTML = "SOLICITAR<br>ASISTENCIA";
+  }
+
+}
+
 function enviarSolicitud(){
 
   if(enviando) return;
   enviando = true;
 
-  // 🔔 SONIDO RESTAURADO
   const audio = document.getElementById("sonidoVip");
   audio.currentTime = 0;
   audio.play().catch(()=>{});
@@ -207,14 +253,24 @@ function enviarSolicitud(){
   const msg = document.getElementById("mensaje");
 
   msg.classList.add("dots");
-  msg.innerHTML = "Enviando solicitud";
+
+  if(document.querySelector(".texto-boton").innerHTML.includes("REQUEST")){
+    msg.innerHTML = "Sending request";
+  }else{
+    msg.innerHTML = "Enviando solicitud";
+  }
 
   fetch("https://script.google.com/macros/s/AKfycbxU5N9gvYgnr6ziPolPuPircfFdsRzLgCfVqntC8WGwZ-wath6i5o1dUuAfPFcBVJh2/exec?mesa=" + mesa)
 
   .then(() => {
 
     msg.classList.remove("dots");
-    msg.innerHTML = "✔ Personal notificado";
+
+    if(document.querySelector(".texto-boton").innerHTML.includes("REQUEST")){
+      msg.innerHTML = "✔ Staff notified";
+    }else{
+      msg.innerHTML = "✔ Personal notificado";
+    }
 
     setTimeout(() => {
       msg.innerHTML = "";
@@ -226,7 +282,12 @@ function enviarSolicitud(){
   .catch(() => {
 
     msg.classList.remove("dots");
-    msg.innerHTML = "❌ Error de conexión";
+
+    if(document.querySelector(".texto-boton").innerHTML.includes("REQUEST")){
+      msg.innerHTML = "❌ Connection error";
+    }else{
+      msg.innerHTML = "❌ Error de conexión";
+    }
 
     setTimeout(() => {
       msg.innerHTML = "";
@@ -241,4 +302,3 @@ function enviarSolicitud(){
 
 </body>
 </html>
-
