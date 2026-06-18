@@ -312,32 +312,53 @@ will-change: transform;
   opacity: 0.65;
   pointer-events: none;
 }
+#flash{
+  position: fixed;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 999;
+}
+  .flash-on{
+  animation: flashAnim 450ms ease;
+}
 
+@keyframes flashAnim{
+  0%{ opacity: 0; }
+  20%{ opacity: 0.25; }
+  100%{ opacity: 0; }
+}
+  
  .pantalla {
   position: absolute;
   width: 100%;
   max-width: 500px;
-  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+              filter 700ms ease;
   will-change: transform, opacity, filter;
 }
 
+/* ESTADO ACTIVO (VISIBLE) */
 .entrada {
   opacity: 1;
   transform: translateY(0) scale(1);
   filter: blur(0);
 }
 
+  
+/* SALIDA (EFECTO DESPEGUE) */
 .salida {
   opacity: 0;
-  transform: translateY(-30px) scale(1.05);
-  filter: blur(10px);
+  transform: translateY(-60px) scale(1.08);
+  filter: blur(12px);
 }
-
 </style>
 </head>
 
 <body>
-
+<div id="flash"></div>
 <!-- 🔔 AUDIO -->
 <audio id="sonidoVip" src="assets/campana-vip.mp3" preload="auto"></audio>
 
@@ -388,11 +409,12 @@ will-change: transform;
 const mesa = 4;
 let enviando = false;
 
-unction seleccionarIdioma(idioma){
+function seleccionarIdioma(idioma){
 
   const idiomaDiv = document.getElementById("pantallaIdioma");
   const principalDiv = document.getElementById("pantallaPrincipal");
   const textoBoton = document.querySelector(".texto-boton");
+  const flash = document.getElementById("flash");
 
   if(idioma === "en"){
     textoBoton.innerHTML = "REQUEST<br>ASSISTANCE";
@@ -400,8 +422,15 @@ unction seleccionarIdioma(idioma){
     textoBoton.innerHTML = "SOLICITAR<br>ASISTENCIA";
   }
 
-  // salida elegante
+  // salida suave
   idiomaDiv.classList.add("salida");
+
+  // FLASH tipo “cambio de sistema”
+  flash.classList.add("flash-on");
+
+  setTimeout(() => {
+    flash.classList.remove("flash-on");
+  }, 450);
 
   setTimeout(() => {
 
@@ -411,7 +440,7 @@ unction seleccionarIdioma(idioma){
     principalDiv.classList.remove("salida");
     principalDiv.classList.add("entrada");
 
-  }, 600);
+  }, 500);
 }
 
   setTimeout(() => {
