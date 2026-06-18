@@ -161,7 +161,74 @@ button:active{
   75%  { content:'...'; }
   100% { content:''; }
 }
+#pantallaIdioma{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
 
+.titulo-bienvenida{
+  font-size:34px;
+  font-weight:800;
+  letter-spacing:4px;
+  color:#f1d58a;
+  margin-bottom:25px;
+  text-shadow:0 0 20px rgba(241,213,138,0.3);
+}
+
+.texto-bienvenida{
+  font-size:32px;
+  font-weight:700;
+  margin-bottom:20px;
+  color:white;
+}
+
+.texto-seleccion{
+  font-size:18px;
+  margin-bottom:40px;
+  line-height:1.7;
+  color:rgba(255,255,255,0.9);
+}
+
+.idioma-btn{
+
+  width:280px;
+  height:80px;
+
+  margin:12px;
+
+  border:none;
+  border-radius:18px;
+
+  background:
+    radial-gradient(circle at 30% 30%,
+    #fff4d6 0%,
+    #d6b56d 20%,
+    #9d7a35 55%,
+    #5b451d 100%);
+
+  color:#1a1a1a;
+
+  font-family:'Montserrat',sans-serif;
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:2px;
+
+  cursor:pointer;
+
+  box-shadow:
+    inset 0 8px 15px rgba(255,255,255,0.35),
+    inset 0 -12px 20px rgba(0,0,0,0.25),
+    0 10px 25px rgba(0,0,0,0.5);
+
+  transition:all .2s ease;
+}
+
+.idioma-btn:active{
+  transform:scale(0.97);
+}
 /* LOGO */
 .logo-vip{
   position: fixed;
