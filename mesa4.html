@@ -374,11 +374,14 @@ function seleccionarIdioma(idioma){
   const principalDiv = document.getElementById("pantallaPrincipal");
 
   const textoBoton = document.querySelector(".texto-boton");
+  const volver = document.getElementById("volverIdioma");
 
   if(idioma === "en"){
     textoBoton.innerHTML = "REQUEST<br>ASSISTANCE";
+    volver.innerHTML = "🌐 Change Language";
   }else{
     textoBoton.innerHTML = "SOLICITAR<br>ASISTENCIA";
+    volver.innerHTML = "🌐 Cambiar idioma";
   }
 
   idiomaDiv.style.opacity = "0";
@@ -402,6 +405,7 @@ function volverIdioma(){
 
   const idiomaDiv = document.getElementById("pantallaIdioma");
   const principalDiv = document.getElementById("pantallaPrincipal");
+  const volver = document.getElementById("volverIdioma");
 
   principalDiv.style.opacity = "0";
 
