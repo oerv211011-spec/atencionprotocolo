@@ -313,22 +313,24 @@ will-change: transform;
   pointer-events: none;
 }
 
-  .pantalla {
+ .pantalla {
   position: absolute;
   width: 100%;
   max-width: 500px;
-  transition: all 0.6s cubic-bezier(0.2, 0.9, 0.2, 1);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity, filter;
 }
-  .salida {
-  opacity: 0;
-  transform: translateY(-20px) scale(1.03);
-  filter: blur(8px);
-}
-  .entrada {
+
+.entrada {
   opacity: 1;
   transform: translateY(0) scale(1);
   filter: blur(0);
+}
+
+.salida {
+  opacity: 0;
+  transform: translateY(-30px) scale(1.05);
+  filter: blur(10px);
 }
 
 </style>
@@ -386,11 +388,10 @@ will-change: transform;
 const mesa = 4;
 let enviando = false;
 
-function seleccionarIdioma(idioma){
+unction seleccionarIdioma(idioma){
 
   const idiomaDiv = document.getElementById("pantallaIdioma");
   const principalDiv = document.getElementById("pantallaPrincipal");
-
   const textoBoton = document.querySelector(".texto-boton");
 
   if(idioma === "en"){
@@ -399,20 +400,19 @@ function seleccionarIdioma(idioma){
     textoBoton.innerHTML = "SOLICITAR<br>ASISTENCIA";
   }
 
- idiomaDiv.classList.add("salida");
+  // salida elegante
+  idiomaDiv.classList.add("salida");
 
-setTimeout(() => {
+  setTimeout(() => {
 
-  idiomaDiv.style.display = "none";
+    idiomaDiv.style.display = "none";
 
-  principalDiv.style.display = "flex";
+    principalDiv.style.display = "flex";
+    principalDiv.classList.remove("salida");
+    principalDiv.classList.add("entrada");
 
-  principalDiv.classList.remove("salida");
-  principalDiv.classList.add("entrada");
-
-  principalDiv.style.opacity = "1";
-
-}, 500);
+  }, 600);
+}
 
   setTimeout(() => {
 
