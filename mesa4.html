@@ -49,6 +49,12 @@ body::before{
 
 /* BOTÓN VIP (NO TOCADO) */
 button{
+
+  display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
   position: relative;
 
   width: 340px;
@@ -141,6 +147,11 @@ button:active{
 /* TEXTO */
 .texto-boton{
   font-weight: 800;
+  font-size: 26px;
+  letter-spacing: 2px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  text-align: center;
 }
 
 /* MENSAJE */
@@ -322,7 +333,9 @@ will-change: transform;
   <button onclick="enviarSolicitud()">
     <span class="campana">🛎️</span>
     <span class="texto-boton">SOLICITAR<br>ASISTENCIA</span>
+  
   </button>
+  
 
   <div id="mensaje"></div>
 
