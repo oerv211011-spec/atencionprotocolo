@@ -137,14 +137,15 @@ button:active{
   font-weight: 800;
 }
 
-/* MENSAJE VERDE */
+/* MENSAJE */
 #mensaje{
   margin-top: 30px;
-  font-size: 18px;
+  font-size: 20px;
   color: #ffffff;
   text-align: center;
   font-weight: 600;
-  min-height: 20px;
+  line-height: 1.6;
+  min-height: 50px;
 }
 
 /* ANIMACIÓN DE PUNTOS */
@@ -394,10 +395,10 @@ function enviarSolicitud(){
     msg.classList.remove("dots");
 
     if(document.querySelector(".texto-boton").innerHTML.includes("REQUEST")){
-      msg.innerHTML = "✔ Staff notified";
-    }else{
-      msg.innerHTML = "✔ Personal notificado";
-    }
+  msg.innerHTML = "✨ Thank you.<br>Our staff will assist you shortly.";
+}else{
+  msg.innerHTML = "✨ Gracias.<br>Nuestro personal acudirá en breve.";
+}
 
    setTimeout(() => {
 
