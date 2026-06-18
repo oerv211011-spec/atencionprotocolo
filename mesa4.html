@@ -399,7 +399,20 @@ function seleccionarIdioma(idioma){
     textoBoton.innerHTML = "SOLICITAR<br>ASISTENCIA";
   }
 
-  idiomaDiv.style.opacity = "0";
+ idiomaDiv.classList.add("salida");
+
+setTimeout(() => {
+
+  idiomaDiv.style.display = "none";
+
+  principalDiv.style.display = "flex";
+
+  principalDiv.classList.remove("salida");
+  principalDiv.classList.add("entrada");
+
+  principalDiv.style.opacity = "1";
+
+}, 500);
 
   setTimeout(() => {
 
@@ -421,22 +434,18 @@ function volverIdioma(){
   const idiomaDiv = document.getElementById("pantallaIdioma");
   const principalDiv = document.getElementById("pantallaPrincipal");
 
-  principalDiv.style.opacity = "0";
+ principalDiv.classList.add("salida");
 
-  setTimeout(() => {
+setTimeout(() => {
 
-    principalDiv.style.display = "none";
+  principalDiv.style.display = "none";
 
-    idiomaDiv.style.display = "flex";
+  idiomaDiv.style.display = "flex";
 
-    idiomaDiv.style.opacity = "0";
+  idiomaDiv.classList.remove("salida");
+  idiomaDiv.classList.add("entrada");
 
-    setTimeout(() => {
-      idiomaDiv.style.opacity = "1";
-    }, 50);
-
-  }, 500);
-
+}, 500);
 }
 function enviarSolicitud(){
 
