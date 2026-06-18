@@ -416,65 +416,52 @@ function seleccionarIdioma(idioma){
   const textoBoton = document.querySelector(".texto-boton");
   const flash = document.getElementById("flash");
 
-  if(idioma === "en"){
-    textoBoton.innerHTML = "REQUEST<br>ASSISTANCE";
-  }else{
-    textoBoton.innerHTML = "SOLICITAR<br>ASISTENCIA";
-  }
+  textoBoton.innerHTML =
+    idioma === "en"
+      ? "REQUEST<br>ASSISTANCE"
+      : "SOLICITAR<br>ASISTENCIA";
 
-  // salida suave
+  // salida idioma
   idiomaDiv.classList.add("salida");
 
-  // FLASH tipo “cambio de sistema”
+  // flash tipo aeropuerto
+  flash.classList.remove("flash-on");
+  void flash.offsetWidth;
   flash.classList.add("flash-on");
 
   setTimeout(() => {
-    flash.classList.remove("flash-on");
-  }, 450);
 
-  setTimeout(() => {
-
+    // ocultar idioma SOLO después del efecto
     idiomaDiv.style.display = "none";
 
+    // mostrar principal
     principalDiv.style.display = "flex";
+
+    // reset estado
     principalDiv.classList.remove("salida");
     principalDiv.classList.add("entrada");
 
-  }, 500);
+  }, 600);
 }
 
-  setTimeout(() => {
 
-    idiomaDiv.style.display = "none";
-
-    principalDiv.style.display = "flex";
-
-    principalDiv.style.opacity = "0";
-
-    setTimeout(() => {
-      principalDiv.style.opacity = "1";
-    }, 50);
-
-  }, 500);
-
-}
 function volverIdioma(){
 
   const idiomaDiv = document.getElementById("pantallaIdioma");
   const principalDiv = document.getElementById("pantallaPrincipal");
 
- principalDiv.classList.add("salida");
+  principalDiv.classList.add("salida");
 
-setTimeout(() => {
+  setTimeout(() => {
 
-  principalDiv.style.display = "none";
+    principalDiv.style.display = "none";
 
-  idiomaDiv.style.display = "flex";
+    idiomaDiv.style.display = "flex";
 
-  idiomaDiv.classList.remove("salida");
-  idiomaDiv.classList.add("entrada");
+    idiomaDiv.classList.remove("salida");
+    idiomaDiv.classList.add("entrada");
 
-}, 500);
+  }, 600);
 }
 function enviarSolicitud(){
 
