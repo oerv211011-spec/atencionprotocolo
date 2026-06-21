@@ -8,7 +8,7 @@
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "assets/logo-lap.png",
+      "src": "assets/vip.png",
       "sizes": "512x512",
       "type": "image/png"
     }
