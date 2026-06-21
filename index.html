@@ -3,9 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <title>Atención VIP</title>
+
+  <!-- Evita cache raro en tablets -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <script>
+    window.onload = function () {
+
+      // Lee la mesa desde la URL: index.html?mesa=1
+      const params = new URLSearchParams(window.location.search);
+      let mesa = params.get("mesa");
+
+      // Si no envían mesa, por defecto va a mesa 1
+      if (!mesa) {
+        mesa = "1";
+      }
+
+      // Validación básica (solo mesas 1 a 7)
+      const mesasValidas = ["1","2","3","4","5","6","7"];
+
+      if (!mesasValidas.includes(mesa)) {
+        mesa = "1";
+      }
+
+      // Redirección final
+      window.location.href = "mesa" + mesa + ".html?v=" + mesa;
+    };
+  </script>
+
 </head>
 
-<body style="background:#000; color:white; display:flex; justify-content:center; align-items:center; height:100vh; flex-direction:column; font-family:Arial;">
-  <h2>Sistema VIP Activo</h2>
+<body style="background:#000; color:white; display:flex; justify-content:center; align-items:center; height:100vh; flex-direction:column; font-family:Arial; margin:0;">
+
+  <h2>Cargando sistema VIP...</h2>
+
 </body>
 </html>
