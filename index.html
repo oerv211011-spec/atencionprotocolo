@@ -9,29 +9,61 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
 
-  <script>
-    window.onload = function () {
+ <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Atención VIP</title>
 
-      // Lee la mesa desde la URL: index.html?mesa=1
-      const params = new URLSearchParams(window.location.search);
-      let mesa = params.get("mesa");
+  <!-- Evita cache raro en tablets -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
 
-      // Si no envían mesa, por defecto va a mesa 1
-      if (!mesa) {
-        mesa = "1";
-      }
+ <script>
+window.onload = function () {
 
-      // Validación básica (solo mesas 1 a 7)
-      const mesasValidas = ["1","2","3","4","5","6","7"];
+  // Leer la mesa desde la URL
+  const params = new URLSearchParams(window.location.search);
+  let mesa = params.get("mesa");
 
-      if (!mesasValidas.includes(mesa)) {
-        mesa = "1";
-      }
+  // Si viene una mesa en la URL, guardarla en la tablet
+  if (mesa) {
+    localStorage.setItem("mesaVIP", mesa);
+  }
 
-      // Redirección final
-      window.location.href = "mesa" + mesa + ".html?v=" + mesa;
-    };
-  </script>
+  // Si no viene en la URL, recuperar la última guardada
+  if (!mesa) {
+    mesa = localStorage.getItem("mesaVIP");
+  }
+
+  // Si es la primera vez y no hay nada guardado
+  if (!mesa) {
+    mesa = "1";
+  }
+
+  // Validar que sea una mesa válida
+  const mesasValidas = ["1","2","3","4","5","6","7"];
+
+  if (!mesasValidas.includes(mesa)) {
+    mesa = "1";
+  }
+
+  // Ir a la página correspondiente
+  window.location.href = "mesa" + mesa + ".html?v=" + Date.now();
+
+};
+</script>
+
+</head>
+
+<body style="background:#000; color:white; display:flex; justify-content:center; align-items:center; height:100vh; flex-direction:column; font-family:Arial; margin:0;">
+
+  <h2>Cargando sistema VIP...</h2>
+
+</body>
+</html>
+
 
 </head>
 
