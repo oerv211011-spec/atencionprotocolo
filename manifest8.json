@@ -1,0 +1,16 @@
+{
+  "name": "Atención VIP - Mesa 8",
+  "short_name": "Mesa 8",
+  "start_url": "/atencionprotocolo/mesa8.html",
+  "scope": "/atencionprotocolo/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "assets/vip.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
