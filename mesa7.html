@@ -418,16 +418,13 @@ function seleccionarIdioma(idioma){
   const idiomaDiv = document.getElementById("pantallaIdioma");
   const principalDiv = document.getElementById("pantallaMenu");
 
-  const textoBoton = document.querySelector(".texto-boton");
-  const volver = document.getElementById("volverIdioma");
+ const volver = document.getElementById("volverIdioma");
 
-  if(idioma === "en"){
-    textoBoton.innerHTML = "REQUEST<br>ASSISTANCE";
+ if(idioma === "en"){
     volver.innerHTML = "🌐 Change Language";
-  }else{
-    textoBoton.innerHTML = "SOLICITAR<br>ASISTENCIA";
+}else{
     volver.innerHTML = "🌐 Cambiar idioma";
-  }
+}
 
   idiomaDiv.style.opacity = "0";
 
@@ -452,23 +449,27 @@ function volverIdioma(){
   const menuDiv = document.getElementById("pantallaMenu");
   const asistenciaDiv = document.getElementById("pantallaAsistencia");
 
-  // ocultar todo lo que pueda estar abierto
+
   menuDiv.style.opacity = "0";
   asistenciaDiv.style.opacity = "0";
+
 
   setTimeout(() => {
 
     menuDiv.style.display = "none";
     asistenciaDiv.style.display = "none";
 
+
     idiomaDiv.style.display = "flex";
     idiomaDiv.style.opacity = "0";
 
+
     setTimeout(() => {
       idiomaDiv.style.opacity = "1";
-    }, 50);
+    },50);
 
-  }, 500);
+
+  },500);
 
 }
 function enviarSolicitud(){
