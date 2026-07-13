@@ -401,7 +401,7 @@ Seleccione una opción
 ✈️ CONSULTAR VUELO
 </button>
 
-<div id="volverIdioma" onclick="volverIdioma()">
+<div id="volverIdiomaMenu" onclick="volverIdioma()">
 🌐 Cambiar idioma
 </div>
 
@@ -428,7 +428,7 @@ function seleccionarIdioma(idioma){
 
  if(idioma === "en"){
 
-    volver.innerHTML = "🌐 Change Language";
+    volverMenu.innerHTML = "🌐 Change Language";
 
     textoBoton.innerHTML = "REQUEST<br>ASSISTANCE";
 
@@ -441,7 +441,7 @@ function seleccionarIdioma(idioma){
 
 }else{
 
-    volver.innerHTML = "🌐 Cambiar idioma";
+    volverMenu.innerHTML = "🌐 Cambiar idioma";
 
     textoBoton.innerHTML = "SOLICITAR<br>ASISTENCIA";
 
