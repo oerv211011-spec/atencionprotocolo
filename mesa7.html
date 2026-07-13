@@ -389,15 +389,15 @@ justify-content:center;
 text-align:center;
 ">
 
-<div class="texto-bienvenida">
-¿Qué desea hacer?
+<div class="texto-bienvenida" id="tituloMenu">
+Seleccione una opción
 </div>
 
-<button class="idioma-btn" onclick="mostrarAsistencia()">
+<button class="idioma-btn" onclick="mostrarAsistencia()" id="btnAsistencia">
 🛎️ SOLICITAR ASISTENCIA
 </button>
 
-<button class="idioma-btn" onclick="mostrarConsultaVuelo()">
+<button class="idioma-btn" onclick="mostrarConsultaVuelo()" id="btnVuelo">
 ✈️ CONSULTAR VUELO
 </button>
 
@@ -418,21 +418,40 @@ function seleccionarIdioma(idioma){
   const idiomaDiv = document.getElementById("pantallaIdioma");
   const principalDiv = document.getElementById("pantallaMenu");
   const textoBoton = document.querySelector(".texto-boton");
+  
+  const tituloMenu = document.getElementById("tituloMenu");
+  const btnAsistencia = document.getElementById("btnAsistencia");
+  const btnVuelo = document.getElementById("btnVuelo");
 
   const volver = document.getElementById("volverIdioma");
 
 
-  if(idioma === "en"){
+ if(idioma === "en"){
 
     volver.innerHTML = "🌐 Change Language";
+
     textoBoton.innerHTML = "REQUEST<br>ASSISTANCE";
 
-  }else{
+    tituloMenu.innerHTML = "Select an option";
+
+    btnAsistencia.innerHTML = "🛎️ REQUEST ASSISTANCE";
+
+    btnVuelo.innerHTML = "✈️ FLIGHT INFORMATION";
+
+
+}else{
 
     volver.innerHTML = "🌐 Cambiar idioma";
+
     textoBoton.innerHTML = "SOLICITAR<br>ASISTENCIA";
 
-  }
+    tituloMenu.innerHTML = "Seleccione una opción";
+
+    btnAsistencia.innerHTML = "🛎️ SOLICITAR ASISTENCIA";
+
+    btnVuelo.innerHTML = "✈️ CONSULTAR VUELO";
+
+}
 
 
   idiomaDiv.style.opacity = "0";
