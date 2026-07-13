@@ -417,14 +417,23 @@ function seleccionarIdioma(idioma){
 
   const idiomaDiv = document.getElementById("pantallaIdioma");
   const principalDiv = document.getElementById("pantallaMenu");
+  const textoBoton = document.querySelector(".texto-boton");
 
- const volver = document.getElementById("volverIdioma");
+  const volver = document.getElementById("volverIdioma");
 
- if(idioma === "en"){
+
+  if(idioma === "en"){
+
     volver.innerHTML = "🌐 Change Language";
-}else{
+    textoBoton.innerHTML = "REQUEST<br>ASSISTANCE";
+
+  }else{
+
     volver.innerHTML = "🌐 Cambiar idioma";
-}
+    textoBoton.innerHTML = "SOLICITAR<br>ASISTENCIA";
+
+  }
+
 
   idiomaDiv.style.opacity = "0";
 
