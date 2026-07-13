@@ -416,7 +416,7 @@ will-change: transform;
 
   <div id="mensaje"></div>
 
-  <div id="volverIdioma" onclick="volverIdioma()">
+  <div id="volverIdiomaAsistencia" onclick="volverIdioma()">
 🌐 Cambiar idioma
 </div>
 
@@ -466,11 +466,13 @@ function seleccionarIdioma(idioma){
   const btnVuelo = document.getElementById("btnVuelo");
 
   const volverMenu = document.getElementById("volverIdiomaMenu");
+  const volverAsistencia = document.getElementById("volverIdiomaAsistencia");
 
 
- if(idioma === "en"){
+if(idioma === "en"){
 
     volverMenu.innerHTML = "🌐 Change Language";
+    volverAsistencia.innerHTML = "🌐 Change Language";
 
     textoBoton.innerHTML = "REQUEST<br>ASSISTANCE";
 
@@ -480,10 +482,10 @@ function seleccionarIdioma(idioma){
 
     btnVuelo.innerHTML = "✈️ FLIGHT INFORMATION";
 
-
 }else{
 
     volverMenu.innerHTML = "🌐 Cambiar idioma";
+    volverAsistencia.innerHTML = "🌐 Cambiar idioma";
 
     textoBoton.innerHTML = "SOLICITAR<br>ASISTENCIA";
 
