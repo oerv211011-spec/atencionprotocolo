@@ -374,7 +374,7 @@ will-change: transform;
 
   <div id="mensaje"></div>
 
-  <div id="volverIdiomaMenu" onclick="volverIdioma()">
+  <div id="volverIdioma" onclick="volverIdioma()">
 🌐 Cambiar idioma
 </div>
 
@@ -449,27 +449,18 @@ function volverIdioma(){
   const menuDiv = document.getElementById("pantallaMenu");
   const asistenciaDiv = document.getElementById("pantallaAsistencia");
 
+  // ocultar todo
+  menuDiv.style.display = "none";
+  asistenciaDiv.style.display = "none";
 
-  menuDiv.style.opacity = "0";
-  asistenciaDiv.style.opacity = "0";
+  // mostrar idiomas
+  idiomaDiv.style.display = "flex";
 
+  idiomaDiv.style.opacity = "0";
 
   setTimeout(() => {
-
-    menuDiv.style.display = "none";
-    asistenciaDiv.style.display = "none";
-
-
-    idiomaDiv.style.display = "flex";
-    idiomaDiv.style.opacity = "0";
-
-
-    setTimeout(() => {
-      idiomaDiv.style.opacity = "1";
-    },50);
-
-
-  },500);
+    idiomaDiv.style.opacity = "1";
+  },50);
 
 }
 function enviarSolicitud(){
