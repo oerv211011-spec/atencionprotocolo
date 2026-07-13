@@ -449,17 +449,19 @@ function seleccionarIdioma(idioma){
 function volverIdioma(){
 
   const idiomaDiv = document.getElementById("pantallaIdioma");
-  const principalDiv = document.getElementById("pantallaAsistencia");
-  const volver = document.getElementById("volverIdioma");
+  const menuDiv = document.getElementById("pantallaMenu");
+  const asistenciaDiv = document.getElementById("pantallaAsistencia");
 
-  principalDiv.style.opacity = "0";
+  // ocultar todo lo que pueda estar abierto
+  menuDiv.style.opacity = "0";
+  asistenciaDiv.style.opacity = "0";
 
   setTimeout(() => {
 
-    principalDiv.style.display = "none";
+    menuDiv.style.display = "none";
+    asistenciaDiv.style.display = "none";
 
     idiomaDiv.style.display = "flex";
-
     idiomaDiv.style.opacity = "0";
 
     setTimeout(() => {
