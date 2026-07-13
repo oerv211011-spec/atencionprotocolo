@@ -363,7 +363,7 @@ will-change: transform;
 </div>
 
 <!-- PANTALLA PRINCIPAL -->
-<div id="pantallaPrincipal" style="display:none; flex-direction:column; align-items:center;">
+<div id="pantallaAsistencia" style="display:none; flex-direction:column; align-items:center;">
 
   <button onclick="enviarSolicitud()">
     <span class="campana">🛎️</span>
@@ -379,7 +379,33 @@ will-change: transform;
   </div>
 
 </div>
+<!-- PANTALLA MENÚ -->
+<div id="pantallaMenu"
+style="
+display:none;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+">
 
+<div class="texto-bienvenida">
+¿Qué desea hacer?
+</div>
+
+<button class="idioma-btn" onclick="mostrarAsistencia()">
+🛎️ SOLICITAR ASISTENCIA
+</button>
+
+<button class="idioma-btn" onclick="mostrarConsultaVuelo()">
+✈️ CONSULTAR VUELO
+</button>
+
+<div id="volverIdioma" onclick="volverIdioma()">
+🌐 Cambiar idioma
+</div>
+
+</div>
 <img src="assets/logo-alturas-transparente.png" class="logo-vip">
 
 <script>
@@ -390,7 +416,7 @@ let enviando = false;
 function seleccionarIdioma(idioma){
 
   const idiomaDiv = document.getElementById("pantallaIdioma");
-  const principalDiv = document.getElementById("pantallaPrincipal");
+  const principalDiv = document.getElementById("pantallaMenu");
 
   const textoBoton = document.querySelector(".texto-boton");
   const volver = document.getElementById("volverIdioma");
@@ -423,7 +449,7 @@ function seleccionarIdioma(idioma){
 function volverIdioma(){
 
   const idiomaDiv = document.getElementById("pantallaIdioma");
-  const principalDiv = document.getElementById("pantallaPrincipal");
+  const principalDiv = document.getElementById("pantallaMenu");
   const volver = document.getElementById("volverIdioma");
 
   principalDiv.style.opacity = "0";
