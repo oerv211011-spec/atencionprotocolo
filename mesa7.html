@@ -793,131 +793,136 @@ async function buscarVuelo(){
     return;
   }
 
+  cancelarBusqueda();
   buscandoVuelo = true;
   document.getElementById("btnBuscarVuelo").disabled = true;
   mostrarCargandoVuelo();
 
-  cancelarBusqueda();
-  buscandoVuelo = true;
-  document.getElementById("btnBuscarVuelo").disabled = true;
   controladorBusqueda = new AbortController();
-  const temporizador = window.setTimeout(() => controladorBusqueda.abort(), 30000);
-
-  const categoriasBase = [
-    { adi:"departures", scope:"domestic", tipo:"departure", trafico:"domestic" },
-    { adi:"departures", scope:"international", tipo:"departure", trafico:"international" },
-    { adi:"arrivals", scope:"domestic", tipo:"arrival", trafico:"domestic" },
-    { adi:"arrivals", scope:"international", tipo:"arrival", trafico:"international" }
-  ];
+  const temporizadorGeneral = window.setTimeout(() => controladorBusqueda.abort(), 45000);
 
   /*
-    La API de LAP interpreta today/yesterday/tomorrow según la fecha de su
-    servidor. Durante la noche en Lima, el servidor puede estar ya en el día
-    siguiente. Por eso buscamos primero "today" y, si no aparece, también
-    "yesterday" y "tomorrow". Esto evita perder vuelos nocturnos como LA2371.
+    Se consulta de una en una y se detiene al encontrar el vuelo.
+    Esto evita lanzar muchas solicitudes simultáneas contra LAP, que en
+    algunas tablets puede producir "Failed to fetch" o agotar el tiempo.
+    Las salidas internacionales van primero porque suelen ser las consultas
+    más frecuentes en el salón y permiten encontrar vuelos como LA2437,
+    LA1437, AA988 y LA2398 con una sola petición.
   */
+  const categorias = [
+    { adi:"departures", scope:"international", tipo:"departure", trafico:"international" },
+    { adi:"departures", scope:"domestic", tipo:"departure", trafico:"domestic" },
+    { adi:"arrivals", scope:"international", tipo:"arrival", trafico:"international" },
+    { adi:"arrivals", scope:"domestic", tipo:"arrival", trafico:"domestic" }
+  ];
+
   const diasConsulta = ["today", "yesterday", "tomorrow"];
+  let huboRespuestaExitosa = false;
+  const erroresTecnicos = [];
 
   try{
-    let vuelos = [];
-    let huboRespuestaExitosa = false;
-
-    /* Primera pasada: usa el buscador de la propia API y se detiene al encontrar. */
     for(const day of diasConsulta){
-      const categorias = categoriasBase.map((categoria) => ({ ...categoria, day }));
-      const respuestas = await Promise.allSettled(
-        categorias.map((categoria) => consultarCategoria(categoria, numero, controladorBusqueda.signal, true))
-      );
+      for(const categoriaBase of categorias){
+        const categoria = { ...categoriaBase, day };
 
-      const exitosas = respuestas.filter((respuesta) => respuesta.status === "fulfilled");
-      if(exitosas.length > 0) huboRespuestaExitosa = true;
+        try{
+          const vuelosCategoria = await consultarCategoria(
+            categoria,
+            numero,
+            controladorBusqueda.signal
+          );
 
-      const encontrados = exitosas
-        .flatMap((respuesta) => respuesta.value)
-        .filter((vuelo) => coincideNumeroVuelo(vuelo, numero));
+          huboRespuestaExitosa = true;
+          const encontrados = vuelosCategoria.filter((vuelo) => coincideNumeroVuelo(vuelo, numero));
 
-      if(encontrados.length > 0){
-        vuelos = encontrados;
-        break;
-      }
-    }
-
-    /*
-      Segunda pasada de respaldo: descarga la lista del día y filtra dentro de
-      la tablet. Sirve si el parámetro search de LAP no reconoce algún formato
-      o si el vuelo aparece como código comercial/código compartido.
-    */
-    if(vuelos.length === 0){
-      for(const day of diasConsulta){
-        const categorias = categoriasBase.map((categoria) => ({ ...categoria, day }));
-        const respuestas = await Promise.allSettled(
-          categorias.map((categoria) => consultarCategoria(categoria, numero, controladorBusqueda.signal, false))
-        );
-
-        const exitosas = respuestas.filter((respuesta) => respuesta.status === "fulfilled");
-        if(exitosas.length > 0) huboRespuestaExitosa = true;
-
-        const encontrados = exitosas
-          .flatMap((respuesta) => respuesta.value)
-          .filter((vuelo) => coincideNumeroVuelo(vuelo, numero));
-
-        if(encontrados.length > 0){
-          vuelos = encontrados;
-          break;
+          if(encontrados.length > 0){
+            mostrarTarjetaVuelo(seleccionarMejorCoincidencia(encontrados, numero));
+            return;
+          }
+        }catch(errorCategoria){
+          if(errorCategoria.name === "AbortError") throw errorCategoria;
+          erroresTecnicos.push(`${day}/${categoria.adi}/${categoria.scope}: ${errorCategoria.message}`);
+          console.warn("Consulta LAP fallida:", categoria, errorCategoria);
         }
       }
     }
 
-    if(vuelos.length === 0){
-      if(!huboRespuestaExitosa){
-        mostrarMensajeVuelo(t("apiErrorTitle"), t("apiErrorText"));
-      }else{
-        mostrarMensajeVuelo(t("notFoundTitle"), t("notFoundText"));
-      }
-      return;
+    if(huboRespuestaExitosa){
+      mostrarMensajeVuelo(t("notFoundTitle"), t("notFoundText"));
+    }else{
+      mostrarErrorApiConDiagnostico(erroresTecnicos);
     }
-
-    const vuelo = seleccionarMejorCoincidencia(vuelos, numero);
-    mostrarTarjetaVuelo(vuelo);
   }catch(error){
     if(error.name !== "AbortError"){
       console.error("Error al consultar vuelo:", error);
+      erroresTecnicos.push(error.message || String(error));
+    }else{
+      erroresTecnicos.push("Tiempo de espera agotado");
     }
-    mostrarMensajeVuelo(t("apiErrorTitle"), t("apiErrorText"));
+    mostrarErrorApiConDiagnostico(erroresTecnicos);
   }finally{
-    window.clearTimeout(temporizador);
+    window.clearTimeout(temporizadorGeneral);
     controladorBusqueda = null;
     buscandoVuelo = false;
     document.getElementById("btnBuscarVuelo").disabled = false;
   }
 }
 
-async function consultarCategoria(categoria, numero, signal, usarSearch = true){
+function mostrarErrorApiConDiagnostico(errores){
+  mostrarMensajeVuelo(t("apiErrorTitle"), t("apiErrorText"));
+
+  /*
+    El detalle solo aparece agregando ?debug=1 al enlace. En la aplicación
+    normal, el pasajero ve únicamente el mensaje elegante de conexión.
+  */
+  const modoDebug = new URLSearchParams(window.location.search).get("debug") === "1";
+  if(!modoDebug) return;
+
+  const detalle = document.createElement("div");
+  detalle.style.cssText = "margin-top:12px;max-width:520px;font:12px/1.5 monospace;color:#ffd9d9;word-break:break-word;";
+  detalle.textContent = errores.length
+    ? errores.slice(0, 6).join(" | ")
+    : "La API no devolvió una respuesta utilizable.";
+  document.getElementById("resultadoVuelo").appendChild(detalle);
+}
+
+async function consultarCategoria(categoria, numero, signal){
   const parametros = new URLSearchParams({
     day:categoria.day || "today",
     adi:categoria.adi,
     scope:categoria.scope,
-    lang:"es"
+    lang:"es",
+    search:numero,
+    _:String(Date.now())
   });
-
-  if(usarSearch){
-    parametros.set("search", numero);
-  }
 
   const respuesta = await fetch(`${API_VUELOS}?${parametros.toString()}`, {
     method:"GET",
+    mode:"cors",
+    credentials:"omit",
     cache:"no-store",
+    headers:{ "Accept":"application/json" },
     signal
   });
 
   if(!respuesta.ok){
-    throw new Error(`API LAP respondió ${respuesta.status}`);
+    throw new Error(`HTTP ${respuesta.status}`);
+  }
+
+  const tipoContenido = respuesta.headers.get("content-type") || "";
+  if(!tipoContenido.toLowerCase().includes("json")){
+    throw new Error(`Respuesta no JSON (${tipoContenido || "sin content-type"})`);
   }
 
   const datos = await respuesta.json();
-  if(!Array.isArray(datos)) return [];
+  const lista = Array.isArray(datos)
+    ? datos
+    : (Array.isArray(datos?.data) ? datos.data
+    : (Array.isArray(datos?.flights) ? datos.flights
+    : (Array.isArray(datos?.items) ? datos.items
+    : (Array.isArray(datos?.result) ? datos.result : []))));
 
-  return datos.map((vuelo) => ({
+  return lista.map((vuelo) => ({
     ...vuelo,
     _tipo:categoria.tipo,
     _trafico:categoria.trafico,
