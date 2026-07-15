@@ -323,15 +323,15 @@ input:focus-visible,
 .menu-actions{
   display:flex;
   flex-direction:column;
-  gap:22px;
-  margin-top:32px;
+  gap:16px;
+  margin-top:28px;
 }
 
 .menu-card{
   position:relative;
   width:100%;
-  min-height:96px;
-  padding:18px 24px;
+  min-height:88px;
+  padding:15px 22px;
   display:grid;
   grid-template-columns:66px minmax(0,1fr) 24px;
   align-items:center;
@@ -534,14 +534,6 @@ input:focus-visible,
   font-family:'Cormorant Garamond',serif;
   font-size:clamp(38px,5vw,52px);
   line-height:1;
-}
-
-#subtituloAsistencia{
-  max-width:470px;
-  margin:12px auto 0;
-  color:var(--texto-suave);
-  font-size:13px;
-  line-height:1.6;
 }
 
 .boton-asistencia{
@@ -869,14 +861,13 @@ input:focus-visible,
 
 .aerolinea{
   overflow:hidden;
-  color:rgba(255,255,255,.68);
-  font-size:11px;
+  color:rgba(255,255,255,.62);
+  font-size:10px;
   font-weight:700;
-  letter-spacing:2px;
+  letter-spacing:1.8px;
   text-overflow:ellipsis;
   text-transform:uppercase;
   white-space:nowrap;
-  font-family:'Montserrat',sans-serif;
 }
 
 .codigo-vuelo{
@@ -892,11 +883,11 @@ input:focus-visible,
 .fecha-destacada{
   margin-top:10px;
   color:var(--oro-200);
+  font-family:'Montserrat',sans-serif;
   font-size:12px;
   font-weight:700;
   letter-spacing:1.8px;
   text-transform:uppercase;
-  font-family:'Montserrat',sans-serif;
 }
 
 .estado-pill{
@@ -959,6 +950,190 @@ input:focus-visible,
   text-align:center;
 }
 
+
+/* Carta gastronómica */
+#pantallaCarta{
+  max-width:1280px;
+  padding:18px 18px 32px;
+}
+
+.carta-shell{
+  width:min(1180px,97vw);
+  height:min(920px,94dvh);
+  min-height:540px;
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto;
+  overflow:hidden;
+  border:1px solid var(--borde);
+  border-radius:28px;
+  background:
+    linear-gradient(145deg,rgba(26,20,14,.96),rgba(7,6,5,.98)),
+    radial-gradient(circle at 50% 0,rgba(215,181,111,.12),transparent 38%);
+  box-shadow:var(--sombra),inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+
+.carta-toolbar{
+  min-height:74px;
+  padding:14px 18px;
+  display:grid;
+  grid-template-columns:minmax(110px,1fr) auto minmax(110px,1fr);
+  align-items:center;
+  gap:14px;
+  border-bottom:1px solid rgba(229,195,122,.18);
+  background:rgba(8,7,5,.52);
+}
+
+.carta-toolbar-title{
+  margin:0;
+  color:var(--marfil);
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(28px,4vw,40px);
+  font-weight:700;
+  line-height:1;
+  text-align:center;
+}
+
+.carta-back{
+  justify-self:start;
+  min-height:42px;
+  padding:9px 14px;
+  border:1px solid rgba(229,195,122,.34);
+  border-radius:13px;
+  color:var(--oro-100);
+  background:rgba(255,255,255,.035);
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  transition:background .2s ease,border-color .2s ease,transform .2s ease;
+}
+
+.carta-back:hover{
+  border-color:var(--borde-intenso);
+  background:rgba(215,181,111,.10);
+  transform:translateY(-1px);
+}
+
+.carta-toolbar-spacer{
+  min-width:110px;
+}
+
+.carta-stage{
+  position:relative;
+  min-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:auto;
+  padding:16px;
+  background:
+    radial-gradient(circle at center,rgba(255,255,255,.035),transparent 60%),
+    #080706;
+  touch-action:pan-y pinch-zoom;
+  overscroll-behavior:contain;
+}
+
+.carta-image{
+  display:block;
+  max-width:100%;
+  max-height:100%;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+  border-radius:8px;
+  box-shadow:0 18px 45px rgba(0,0,0,.55);
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
+.carta-loading{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--oro-200);
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:1px;
+  background:rgba(8,7,5,.84);
+  transition:opacity .2s ease;
+  pointer-events:none;
+}
+
+.carta-loading.oculto{
+  opacity:0;
+}
+
+.carta-controls{
+  min-height:74px;
+  padding:12px 18px;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:14px;
+  border-top:1px solid rgba(229,195,122,.18);
+  background:rgba(8,7,5,.72);
+}
+
+.carta-nav-btn{
+  min-width:128px;
+  min-height:46px;
+  padding:10px 16px;
+  border:1px solid rgba(229,195,122,.42);
+  border-radius:14px;
+  color:var(--marfil);
+  background:linear-gradient(145deg,rgba(42,32,20,.96),rgba(17,13,9,.96));
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  transition:transform .2s ease,border-color .2s ease,opacity .2s ease;
+}
+
+.carta-nav-btn:first-child{ justify-self:end; }
+.carta-nav-btn:last-child{ justify-self:start; }
+
+.carta-nav-btn:hover:not(:disabled){
+  transform:translateY(-1px);
+  border-color:var(--borde-intenso);
+}
+
+.carta-nav-btn:disabled{
+  opacity:.28;
+  cursor:default;
+}
+
+.carta-page{
+  min-width:88px;
+  color:var(--oro-200);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:1.2px;
+  text-align:center;
+  text-transform:uppercase;
+}
+
+.carta-swipe-hint{
+  position:absolute;
+  right:18px;
+  bottom:14px;
+  padding:7px 10px;
+  border-radius:999px;
+  color:rgba(255,255,255,.54);
+  background:rgba(0,0,0,.46);
+  font-size:10px;
+  font-weight:600;
+  pointer-events:none;
+}
+
+.carta-abierta .logo-vip{ opacity:0; }
+
+@media (orientation:portrait){
+  .carta-shell{ height:min(900px,92dvh); }
+}
+
+
 .logo-vip{
   position:fixed;
   bottom:20px;
@@ -1001,6 +1176,38 @@ input:focus-visible,
 
   .menu-card-title{
     font-size:17px;
+  }
+
+  .carta-toolbar{
+    grid-template-columns:auto 1fr;
+  }
+
+  .carta-toolbar-title{
+    text-align:right;
+  }
+
+  .carta-toolbar-spacer{
+    display:none;
+  }
+
+  .carta-controls{
+    grid-template-columns:1fr auto 1fr;
+    padding:10px;
+  }
+
+  .carta-nav-btn{
+    min-width:0;
+    width:100%;
+    padding:9px 8px;
+    font-size:11px;
+  }
+
+  .carta-stage{
+    padding:8px;
+  }
+
+  .carta-swipe-hint{
+    display:none;
   }
 
   .menu-card-detail{
@@ -1153,6 +1360,23 @@ input:focus-visible,
 
         <span class="menu-card-arrow" aria-hidden="true">›</span>
       </button>
+
+      <button type="button" class="menu-card" onclick="mostrarCarta()" id="btnCarta">
+        <span class="menu-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 3h9a3 3 0 0 1 3 3v15H7a3 3 0 0 1-3-3V5a2 2 0 0 1 2-2Z"></path>
+            <path d="M7 3v15a3 3 0 0 0 3 3"></path>
+            <path d="M10 8h5M10 12h5"></path>
+          </svg>
+        </span>
+
+        <span class="menu-card-copy">
+          <span class="menu-card-kicker" id="cartaKicker">GASTRONOMÍA ALTURAS</span>
+          <span class="menu-card-title" id="cartaTituloMenu">Nuestra carta</span>
+        </span>
+
+        <span class="menu-card-arrow" aria-hidden="true">›</span>
+      </button>
     </div>
 
     <footer class="menu-footer">
@@ -1167,7 +1391,6 @@ input:focus-visible,
     <header class="assistance-intro">
       <div class="vip-eyebrow" id="asistenciaEyebrow">SERVICIO PERSONALIZADO</div>
       <h1 id="tituloAsistencia">¿Necesita asistencia?</h1>
-      <p id="subtituloAsistencia">Toque el botón y nuestro equipo acudirá a su zona a la brevedad.</p>
     </header>
 
     <button type="button" class="boton-asistencia" onclick="enviarSolicitud()" id="botonAsistenciaGrande" aria-label="Solicitar asistencia">
@@ -1197,7 +1420,7 @@ input:focus-visible,
   <div class="consulta-panel">
     <div class="vip-eyebrow" id="vueloEyebrow">INFORMACIÓN DE VUELO</div>
     <h1 class="titulo-seccion" id="tituloVuelo">Consultar vuelo</h1>
-    <p class="subtitulo-seccion" id="subtituloVuelo">Ingrese el número de vuelo para consultar la información publicada por Lima Airport.</p>
+    <p class="subtitulo-seccion" id="subtituloVuelo">Ingrese su número de vuelo.</p>
 
 
     <div class="selector-fecha" role="group" aria-label="Fecha del vuelo">
@@ -1227,6 +1450,30 @@ input:focus-visible,
   <div id="volverIdiomaVuelo" class="enlace-secundario" onclick="volverIdioma()" role="button" tabindex="0">🌐 Cambiar idioma</div>
 </section>
 
+
+<!-- PANTALLA CARTA -->
+<section id="pantallaCarta" class="pantalla" aria-label="Nuestra carta">
+  <div class="carta-shell">
+    <header class="carta-toolbar">
+      <button type="button" class="carta-back" id="volverCarta" onclick="volverMenu()">⬅️ Volver</button>
+      <h1 class="carta-toolbar-title" id="tituloCarta">Nuestra carta</h1>
+      <span class="carta-toolbar-spacer" aria-hidden="true"></span>
+    </header>
+
+    <div class="carta-stage" id="cartaStage">
+      <img id="imagenCarta" class="carta-image" src="" alt="">
+      <div id="cartaLoading" class="carta-loading">Cargando carta...</div>
+      <div class="carta-swipe-hint" id="cartaSwipeHint">Deslice para cambiar de página</div>
+    </div>
+
+    <footer class="carta-controls">
+      <button type="button" class="carta-nav-btn" id="cartaAnterior" onclick="cambiarPaginaCarta(-1)">‹ Anterior</button>
+      <div class="carta-page" id="paginaCartaIndicador">Página 1 de 8</div>
+      <button type="button" class="carta-nav-btn" id="cartaSiguiente" onclick="cambiarPaginaCarta(1)">Siguiente ›</button>
+    </footer>
+  </div>
+</section>
+
 <img src="assets/logo-alturas-transparente.png" class="logo-vip" alt="">
 
 <script>
@@ -1241,6 +1488,8 @@ let modoFecha = "next";
 let enviando = false;
 let buscandoVuelo = false;
 let controladorBusqueda = null;
+let paginaCartaActual = 1;
+const TOTAL_PAGINAS_CARTA = 8;
 
 const textos = {
   es: {
@@ -1250,9 +1499,10 @@ const textos = {
     assistanceMenuTitle: "Solicitar asistencia",
     flightKicker: "INFORMACIÓN EN TIEMPO REAL",
     flightMenuTitle: "Consultar vuelo",
+    menuKicker: "GASTRONOMÍA ALTURAS",
+    menuMenuTitle: "Nuestra carta",
     assistanceEyebrow: "SERVICIO PERSONALIZADO",
     assistanceTitle: "¿Necesita asistencia?",
-    assistanceSubtitle: "Toque el botón y nuestro equipo acudirá a su zona a la brevedad.",
     flightEyebrow: "INFORMACIÓN DE VUELO",
     changeLanguage: "🌐 Cambiar idioma",
     back: "⬅️ Volver",
@@ -1261,7 +1511,14 @@ const textos = {
     thanks: "✨ Gracias.<br>Nuestro personal acudirá en breve.",
     connectionError: "❌ Error de conexión",
     flightTitle: "Consultar vuelo",
-    flightSubtitle: "Ingrese el número de vuelo y seleccione la fecha. La opción recomendada es Próximo vuelo.",
+    flightSubtitle: "Ingrese su número de vuelo.",
+    menuTitleCarta: "Nuestra carta",
+    previousPage: "‹ Anterior",
+    nextPage: "Siguiente ›",
+    pageWord: "Página",
+    ofWord: "de",
+    loadingMenu: "Cargando carta...",
+    swipeMenu: "Deslice para cambiar de página",
     nextFlight: "PRÓXIMO VUELO",
     today: "HOY",
     tomorrow: "MAÑANA",
@@ -1302,9 +1559,10 @@ const textos = {
     assistanceMenuTitle: "Request assistance",
     flightKicker: "REAL-TIME INFORMATION",
     flightMenuTitle: "Flight information",
+    menuKicker: "ALTURAS DINING",
+    menuMenuTitle: "Our menu",
     assistanceEyebrow: "PERSONALIZED SERVICE",
     assistanceTitle: "Do you need assistance?",
-    assistanceSubtitle: "Tap the button and our team will assist you shortly.",
     flightEyebrow: "FLIGHT INFORMATION",
     changeLanguage: "🌐 Change language",
     back: "⬅️ Back",
@@ -1313,7 +1571,14 @@ const textos = {
     thanks: "✨ Thank you.<br>Our staff will assist you shortly.",
     connectionError: "❌ Connection error",
     flightTitle: "Flight information",
-    flightSubtitle: "Enter the flight number and select the date. The recommended option is Next flight.",
+    flightSubtitle: "Enter your flight number.",
+    menuTitleCarta: "Our menu",
+    previousPage: "‹ Previous",
+    nextPage: "Next ›",
+    pageWord: "Page",
+    ofWord: "of",
+    loadingMenu: "Loading menu...",
+    swipeMenu: "Swipe to change page",
     nextFlight: "NEXT FLIGHT",
     today: "TODAY",
     tomorrow: "TOMORROW",
@@ -1349,7 +1614,7 @@ const textos = {
   }
 };
 
-const pantallas = ["pantallaIdioma", "pantallaMenu", "pantallaAsistencia", "pantallaVuelo"];
+const pantallas = ["pantallaIdioma", "pantallaMenu", "pantallaAsistencia", "pantallaVuelo", "pantallaCarta"];
 
 function t(clave){
   return textos[idiomaActual][clave] || clave;
@@ -1363,6 +1628,7 @@ function mostrarPantalla(id){
 
   const activa = document.getElementById(id);
   activa.scrollTop = 0;
+  document.body.classList.toggle("carta-abierta", id === "pantallaCarta");
 }
 
 function seleccionarIdioma(idioma){
@@ -1380,15 +1646,17 @@ function actualizarTextos(){
   document.getElementById("asistenciaTituloMenu").textContent = t("assistanceMenuTitle");
   document.getElementById("vueloKicker").textContent = t("flightKicker");
   document.getElementById("vueloTituloMenu").textContent = t("flightMenuTitle");
+  document.getElementById("cartaKicker").textContent = t("menuKicker");
+  document.getElementById("cartaTituloMenu").textContent = t("menuMenuTitle");
 
   document.getElementById("asistenciaEyebrow").textContent = t("assistanceEyebrow");
   document.getElementById("tituloAsistencia").textContent = t("assistanceTitle");
-  document.getElementById("subtituloAsistencia").textContent = t("assistanceSubtitle");
   document.getElementById("vueloEyebrow").textContent = t("flightEyebrow");
 
   document.getElementById("volverIdiomaMenu").textContent = t("changeLanguage");
   document.getElementById("volverIdiomaAsistencia").textContent = t("changeLanguage");
   document.getElementById("volverIdiomaVuelo").textContent = t("changeLanguage");
+  document.getElementById("volverCarta").textContent = t("back");
   document.getElementById("volverAsistenciaMenu").textContent = t("back");
   document.getElementById("volverVuelo").textContent = t("back");
 
@@ -1403,7 +1671,13 @@ function actualizarTextos(){
   document.getElementById("numeroVuelo").placeholder = t("placeholder");
   document.getElementById("numeroVuelo").setAttribute("aria-label", t("flight"));
   document.getElementById("btnBuscarVuelo").textContent = t("search");
+  document.getElementById("tituloCarta").textContent = t("menuTitleCarta");
+  document.getElementById("cartaAnterior").textContent = t("previousPage");
+  document.getElementById("cartaSiguiente").textContent = t("nextPage");
+  document.getElementById("cartaLoading").textContent = t("loadingMenu");
+  document.getElementById("cartaSwipeHint").textContent = t("swipeMenu");
   actualizarSelectorFecha();
+  actualizarCarta(false);
 }
 
 
@@ -1493,6 +1767,66 @@ function mostrarConsultaVuelo(){
   limpiarConsultaVuelo();
   mostrarPantalla("pantallaVuelo");
   window.setTimeout(() => document.getElementById("numeroVuelo").focus(), 250);
+}
+
+
+function mostrarCarta(){
+  paginaCartaActual = 1;
+  mostrarPantalla("pantallaCarta");
+  actualizarCarta(true);
+}
+
+function rutaPaginaCarta(pagina){
+  const idiomaCarpeta = idiomaActual === "en" ? "en" : "es";
+  return `assets/carta/${idiomaCarpeta}/page-${pagina}.webp`;
+}
+
+function actualizarCarta(forzarCarga = true){
+  const imagen = document.getElementById("imagenCarta");
+  const cargando = document.getElementById("cartaLoading");
+  const indicador = document.getElementById("paginaCartaIndicador");
+  const anterior = document.getElementById("cartaAnterior");
+  const siguiente = document.getElementById("cartaSiguiente");
+
+  if(!imagen || !indicador) return;
+
+  indicador.textContent = `${t("pageWord")} ${paginaCartaActual} ${t("ofWord")} ${TOTAL_PAGINAS_CARTA}`;
+  anterior.disabled = paginaCartaActual <= 1;
+  siguiente.disabled = paginaCartaActual >= TOTAL_PAGINAS_CARTA;
+
+  const nuevaRuta = rutaPaginaCarta(paginaCartaActual);
+
+  if(forzarCarga || imagen.getAttribute("src") !== nuevaRuta){
+    cargando.textContent = t("loadingMenu");
+    cargando.classList.remove("oculto");
+    imagen.alt = `${t("menuTitleCarta")} - ${t("pageWord")} ${paginaCartaActual}`;
+    imagen.onload = () => cargando.classList.add("oculto");
+    imagen.onerror = () => {
+      cargando.textContent = idiomaActual === "en"
+        ? "Unable to load this page."
+        : "No se pudo cargar esta página.";
+      cargando.classList.remove("oculto");
+    };
+    imagen.src = nuevaRuta;
+  }
+
+  [paginaCartaActual - 1, paginaCartaActual + 1]
+    .filter((pagina) => pagina >= 1 && pagina <= TOTAL_PAGINAS_CARTA)
+    .forEach((pagina) => {
+      const precarga = new Image();
+      precarga.src = rutaPaginaCarta(pagina);
+    });
+}
+
+function cambiarPaginaCarta(direccion){
+  const nuevaPagina = Math.min(
+    TOTAL_PAGINAS_CARTA,
+    Math.max(1, paginaCartaActual + direccion)
+  );
+
+  if(nuevaPagina === paginaCartaActual) return;
+  paginaCartaActual = nuevaPagina;
+  actualizarCarta(true);
 }
 
 function enviarSolicitud(){
@@ -1925,6 +2259,40 @@ inputVuelo.addEventListener("keydown", (evento) => {
     evento.preventDefault();
     buscarVuelo();
   }
+});
+
+const cartaStage = document.getElementById("cartaStage");
+let cartaTouchInicioX = null;
+let cartaTouchInicioY = null;
+
+cartaStage.addEventListener("touchstart", (evento) => {
+  if(evento.touches.length !== 1){
+    cartaTouchInicioX = null;
+    cartaTouchInicioY = null;
+    return;
+  }
+  cartaTouchInicioX = evento.touches[0].clientX;
+  cartaTouchInicioY = evento.touches[0].clientY;
+}, { passive:true });
+
+cartaStage.addEventListener("touchend", (evento) => {
+  if(cartaTouchInicioX === null || !evento.changedTouches.length) return;
+
+  const deltaX = evento.changedTouches[0].clientX - cartaTouchInicioX;
+  const deltaY = evento.changedTouches[0].clientY - cartaTouchInicioY;
+  cartaTouchInicioX = null;
+  cartaTouchInicioY = null;
+
+  if(Math.abs(deltaX) > 55 && Math.abs(deltaX) > Math.abs(deltaY)){
+    cambiarPaginaCarta(deltaX < 0 ? 1 : -1);
+  }
+}, { passive:true });
+
+document.addEventListener("keydown", (evento) => {
+  if(!document.getElementById("pantallaCarta").classList.contains("activa")) return;
+  if(evento.key === "ArrowRight") cambiarPaginaCarta(1);
+  if(evento.key === "ArrowLeft") cambiarPaginaCarta(-1);
+  if(evento.key === "Escape") volverMenu();
 });
 
 activarTeclado();
