@@ -447,7 +447,7 @@ justify-content:center;
 text-align:center;
 ">
 
-<div class="texto-bienvenida">
+<div class="texto-bienvenida" id="tituloVuelo">
 Consultar vuelo
 </div>
 
@@ -663,6 +663,18 @@ function mostrarConsultaVuelo(){
 document.getElementById("pantallaMenu").style.display="none";
 
 document.getElementById("pantallaVuelo").style.display="flex";
+
+}
+  function volverMenu(){
+
+document.getElementById("pantallaVuelo").style.display="none";
+
+document.getElementById("pantallaMenu").style.display="flex";
+
+}
+  function buscarVuelo(){
+
+alert("Conectando con la API de LAP...");
 
 }
 </script>
