@@ -801,25 +801,75 @@ async function buscarVuelo(){
   buscandoVuelo = true;
   document.getElementById("btnBuscarVuelo").disabled = true;
   controladorBusqueda = new AbortController();
-  const temporizador = window.setTimeout(() => controladorBusqueda.abort(), 12000);
+  const temporizador = window.setTimeout(() => controladorBusqueda.abort(), 30000);
 
-  const categorias = [
+  const categoriasBase = [
     { adi:"departures", scope:"domestic", tipo:"departure", trafico:"domestic" },
     { adi:"departures", scope:"international", tipo:"departure", trafico:"international" },
     { adi:"arrivals", scope:"domestic", tipo:"arrival", trafico:"domestic" },
     { adi:"arrivals", scope:"international", tipo:"arrival", trafico:"international" }
   ];
 
-  try{
-    const respuestas = await Promise.allSettled(
-      categorias.map((categoria) => consultarCategoria(categoria, numero, controladorBusqueda.signal))
-    );
+  /*
+    La API de LAP interpreta today/yesterday/tomorrow según la fecha de su
+    servidor. Durante la noche en Lima, el servidor puede estar ya en el día
+    siguiente. Por eso buscamos primero "today" y, si no aparece, también
+    "yesterday" y "tomorrow". Esto evita perder vuelos nocturnos como LA2371.
+  */
+  const diasConsulta = ["today", "yesterday", "tomorrow"];
 
-    const exitosas = respuestas.filter((respuesta) => respuesta.status === "fulfilled");
-    const vuelos = exitosas.flatMap((respuesta) => respuesta.value);
+  try{
+    let vuelos = [];
+    let huboRespuestaExitosa = false;
+
+    /* Primera pasada: usa el buscador de la propia API y se detiene al encontrar. */
+    for(const day of diasConsulta){
+      const categorias = categoriasBase.map((categoria) => ({ ...categoria, day }));
+      const respuestas = await Promise.allSettled(
+        categorias.map((categoria) => consultarCategoria(categoria, numero, controladorBusqueda.signal, true))
+      );
+
+      const exitosas = respuestas.filter((respuesta) => respuesta.status === "fulfilled");
+      if(exitosas.length > 0) huboRespuestaExitosa = true;
+
+      const encontrados = exitosas
+        .flatMap((respuesta) => respuesta.value)
+        .filter((vuelo) => coincideNumeroVuelo(vuelo, numero));
+
+      if(encontrados.length > 0){
+        vuelos = encontrados;
+        break;
+      }
+    }
+
+    /*
+      Segunda pasada de respaldo: descarga la lista del día y filtra dentro de
+      la tablet. Sirve si el parámetro search de LAP no reconoce algún formato
+      o si el vuelo aparece como código comercial/código compartido.
+    */
+    if(vuelos.length === 0){
+      for(const day of diasConsulta){
+        const categorias = categoriasBase.map((categoria) => ({ ...categoria, day }));
+        const respuestas = await Promise.allSettled(
+          categorias.map((categoria) => consultarCategoria(categoria, numero, controladorBusqueda.signal, false))
+        );
+
+        const exitosas = respuestas.filter((respuesta) => respuesta.status === "fulfilled");
+        if(exitosas.length > 0) huboRespuestaExitosa = true;
+
+        const encontrados = exitosas
+          .flatMap((respuesta) => respuesta.value)
+          .filter((vuelo) => coincideNumeroVuelo(vuelo, numero));
+
+        if(encontrados.length > 0){
+          vuelos = encontrados;
+          break;
+        }
+      }
+    }
 
     if(vuelos.length === 0){
-      if(exitosas.length === 0){
+      if(!huboRespuestaExitosa){
         mostrarMensajeVuelo(t("apiErrorTitle"), t("apiErrorText"));
       }else{
         mostrarMensajeVuelo(t("notFoundTitle"), t("notFoundText"));
@@ -842,14 +892,17 @@ async function buscarVuelo(){
   }
 }
 
-async function consultarCategoria(categoria, numero, signal){
+async function consultarCategoria(categoria, numero, signal, usarSearch = true){
   const parametros = new URLSearchParams({
-    day:"today",
+    day:categoria.day || "today",
     adi:categoria.adi,
     scope:categoria.scope,
-    lang:"es",
-    search:numero
+    lang:"es"
   });
+
+  if(usarSearch){
+    parametros.set("search", numero);
+  }
 
   const respuesta = await fetch(`${API_VUELOS}?${parametros.toString()}`, {
     method:"GET",
@@ -867,15 +920,86 @@ async function consultarCategoria(categoria, numero, signal){
   return datos.map((vuelo) => ({
     ...vuelo,
     _tipo:categoria.tipo,
-    _trafico:categoria.trafico
+    _trafico:categoria.trafico,
+    _diaConsulta:categoria.day || "today"
   }));
 }
 
-function seleccionarMejorCoincidencia(vuelos, numeroBuscado){
-  const normalizado = (valor) => normalizarNumeroVuelo(valor);
+const CAMPOS_CODIGO_VUELO = [
+  "cod_vuelo", "cod_vuelo_op", "codigo_vuelo", "num_vuelo", "nro_vuelo",
+  "flight", "flight_number", "flightnumber", "flight_code", "flightcode",
+  "numeroVuelo", "codigoVuelo", "vuelo", "operating_flight", "marketing_flight"
+];
 
-  return vuelos.find((vuelo) => normalizado(vuelo.cod_vuelo) === numeroBuscado)
-    || vuelos.find((vuelo) => normalizado(vuelo.cod_vuelo_op) === numeroBuscado)
+function normalizarNombreCampo(valor){
+  return String(valor || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9]/g, "")
+    .toLowerCase();
+}
+
+function obtenerValorFlexible(objeto, nombres){
+  if(!objeto || typeof objeto !== "object") return "";
+  const buscados = new Set(nombres.map(normalizarNombreCampo));
+
+  for(const [clave, valor] of Object.entries(objeto)){
+    if(buscados.has(normalizarNombreCampo(clave)) && valor !== null && valor !== undefined){
+      return valor;
+    }
+  }
+  return "";
+}
+
+function recopilarTextos(objeto, profundidad = 0, salida = []){
+  if(profundidad > 2 || objeto === null || objeto === undefined) return salida;
+
+  if(typeof objeto === "string" || typeof objeto === "number"){
+    salida.push(String(objeto));
+    return salida;
+  }
+
+  if(Array.isArray(objeto)){
+    objeto.slice(0, 30).forEach((item) => recopilarTextos(item, profundidad + 1, salida));
+    return salida;
+  }
+
+  if(typeof objeto === "object"){
+    Object.entries(objeto).forEach(([clave, valor]) => {
+      if(!clave.startsWith("_")) recopilarTextos(valor, profundidad + 1, salida);
+    });
+  }
+
+  return salida;
+}
+
+function codigosPosiblesVuelo(vuelo){
+  const codigos = [];
+  const directo = obtenerValorFlexible(vuelo, CAMPOS_CODIGO_VUELO);
+  if(directo !== "") codigos.push(normalizarNumeroVuelo(directo));
+
+  /* Respaldo para códigos compartidos o campos con nombres no documentados. */
+  recopilarTextos(vuelo).forEach((texto) => {
+    const compactado = normalizarNumeroVuelo(texto);
+    const coincidencias = compactado.match(/[A-Z]{2,3}\d{1,4}/g) || [];
+    codigos.push(...coincidencias.map(normalizarNumeroVuelo));
+  });
+
+  return [...new Set(codigos.filter(Boolean))];
+}
+
+function coincideNumeroVuelo(vuelo, numeroBuscado){
+  const codigos = codigosPosiblesVuelo(vuelo);
+  if(codigos.includes(numeroBuscado)) return true;
+
+  /* Acepta que la pantalla muestre un código comercial y la API lo agrupe. */
+  const parteNumerica = numeroBuscado.replace(/\D/g, "");
+  return parteNumerica.length >= 3 && codigos.some((codigo) => codigo.replace(/\D/g, "") === parteNumerica);
+}
+
+function seleccionarMejorCoincidencia(vuelos, numeroBuscado){
+  return vuelos.find((vuelo) => codigosPosiblesVuelo(vuelo).includes(numeroBuscado))
+    || vuelos.find((vuelo) => coincideNumeroVuelo(vuelo, numeroBuscado))
     || vuelos[0];
 }
 
@@ -896,22 +1020,49 @@ function mostrarMensajeVuelo(titulo, mensaje){
 }
 
 function mostrarTarjetaVuelo(vuelo){
-  const codigo = vuelo.cod_vuelo || vuelo.cod_vuelo_op || t("unavailable");
-  const aerolinea = vuelo.abr_aerolinea || vuelo.cod_aerolinea || t("unavailable");
-  const estadoOriginal = vuelo.dsc_observacion || vuelo.dsc_estado || "";
+  const codigoDetectado = codigosPosiblesVuelo(vuelo)[0];
+  const codigo = codigoDetectado || obtenerValorFlexible(vuelo, CAMPOS_CODIGO_VUELO) || t("unavailable");
+
+  const aerolinea = obtenerValorFlexible(vuelo, [
+    "abr_aerolinea", "cod_aerolinea", "dsc_aerolinea", "aerolinea",
+    "airline", "airline_name", "airlineName", "carrier"
+  ]) || t("unavailable");
+
+  const estadoOriginal = obtenerValorFlexible(vuelo, [
+    "dsc_observacion", "dsc_estado", "observacion", "estado", "status",
+    "flight_status", "flightStatus", "remark", "remarks"
+  ]) || "";
   const estado = traducirEstado(estadoOriginal);
   const claseEstado = obtenerClaseEstado(estadoOriginal);
 
-  const ciudad = vuelo.dsc_prc_dest || vuelo.cod_prc_dest || t("unavailable");
+  const ciudad = obtenerValorFlexible(vuelo, vuelo._tipo === "arrival" ? [
+    "dsc_prc_org", "cod_prc_org", "origen", "origin", "origin_city",
+    "originCity", "city_origin", "procedencia"
+  ] : [
+    "dsc_prc_dest", "cod_prc_dest", "destino", "destination",
+    "destination_city", "destinationCity", "city_destination"
+  ]) || t("unavailable");
   const etiquetaCiudad = vuelo._tipo === "arrival" ? t("origin") : t("destination");
 
-  const horaProgramada = formatearHora(vuelo.hra_prog || vuelo.fch_hra_prog);
-  const horaActualizada = formatearHora(vuelo.fch_hra_real || vuelo.fch_hra_ult || vuelo.fch_hra_est);
+  const horaProgramada = formatearHora(obtenerValorFlexible(vuelo, [
+    "hra_prog", "fch_hra_prog", "hora_programada", "scheduled_time",
+    "scheduledTime", "departure_time", "departureTime", "arrival_time", "arrivalTime"
+  ]));
+  const horaActualizada = formatearHora(obtenerValorFlexible(vuelo, [
+    "fch_hra_real", "fch_hra_ult", "fch_hra_est", "hora_estimada", "hora_real",
+    "estimated_time", "estimatedTime", "actual_time", "actualTime"
+  ]));
   const mostrarHoraActualizada = horaActualizada !== t("unavailable") && horaActualizada !== horaProgramada;
 
-  const puerta = primerValor(vuelo.num_puerta_1, vuelo.num_puerta_2);
-  const faja = primerValor(vuelo.num_faja_1, vuelo.num_faja_2);
-  const terminal = vuelo.num_term_pasajero || vuelo.num_term_aeronave || t("unavailable");
+  const puerta = obtenerValorFlexible(vuelo, [
+    "num_puerta_1", "num_puerta_2", "puerta", "gate", "boarding_gate", "boardingGate"
+  ]);
+  const faja = obtenerValorFlexible(vuelo, [
+    "num_faja_1", "num_faja_2", "faja", "belt", "baggage_belt", "baggageBelt"
+  ]);
+  const terminal = obtenerValorFlexible(vuelo, [
+    "num_term_pasajero", "num_term_aeronave", "terminal", "passenger_terminal", "passengerTerminal"
+  ]) || t("unavailable");
   const operacion = `${vuelo._tipo === "arrival" ? t("arrival") : t("departure")} · ${vuelo._trafico === "international" ? t("international") : t("domestic")}`;
 
   const datos = [
