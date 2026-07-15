@@ -1,687 +1,1055 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#17120b">
 <title>Atención VIP - Mesa 7</title>
 
 <link rel="icon" href="assets/logo-lap.png">
 <link rel="apple-touch-icon" href="assets/logo-lap.png">
 <link rel="manifest" href="manifest7.json">
-
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
 
 <style>
-
-body{
-  font-family: 'Montserrat', sans-serif;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
+:root{
+  --dorado-claro:#f7f1e3;
+  --dorado:#d8b878;
+  --dorado-medio:#b88a4a;
+  --dorado-oscuro:#8a6436;
+  --fondo-panel:rgba(15,12,8,.78);
+  --borde:rgba(241,213,138,.34);
+  --texto-suave:rgba(255,255,255,.75);
 }
 
-/* Fondo VIP */
+*{ box-sizing:border-box; }
+
+html, body{ width:100%; min-height:100%; }
+
+body{
+  font-family:'Montserrat',sans-serif;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  min-height:100dvh;
+  margin:0;
+  position:relative;
+  overflow:hidden;
+  background:#14100b;
+}
+
 body::before{
   content:"";
   position:absolute;
   inset:0;
-
   background:
-    radial-gradient(circle at 50% 40%, rgba(255,244,214,0.10), transparent 55%),
-    radial-gradient(circle at 20% 80%, rgba(241,213,138,0.08), transparent 60%),
-    linear-gradient(rgba(0,0,0,0.68), rgba(0,0,0,0.68)),
+    radial-gradient(circle at 50% 40%, rgba(255,244,214,.10), transparent 55%),
+    radial-gradient(circle at 20% 80%, rgba(241,213,138,.08), transparent 60%),
+    linear-gradient(rgba(0,0,0,.68), rgba(0,0,0,.68)),
     url('assets/salon-vip.jpeg');
-
-  background-size: cover;
-  background-position: 40% center;
-  background-repeat: no-repeat;
-
-  filter: blur(8px) brightness(0.55);
-  transform: scale(1.10);
-
-  z-index: -1;
+  background-size:cover;
+  background-position:40% center;
+  background-repeat:no-repeat;
+  filter:blur(8px) brightness(.55);
+  transform:scale(1.10);
+  z-index:-1;
 }
 
-/* BOTÓN VIP (NO TOCADO) */
-button{
-
-  display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-text-align: center;
-  position: relative;
-
-  width: 340px;
-  height: 340px;
-
-  border-radius: 50%;
-  border: 1.5px solid rgba(255,244,214,0.35);
-
-background:
-radial-gradient(circle at 30% 25%,
-#f7f1e3 0%,
-#d8b878 20%,
-#b88a4a 45%,
-#8a6436 75%,
-#3b2a16 100%);
-
-
-  color: #1a1a1a;
-  cursor: pointer;
-
-  box-shadow:
-  inset 0 8px 14px rgba(255,255,255,0.14),
-  inset 0 -12px 18px rgba(0,0,0,0.28),
-  0 16px 35px rgba(0,0,0,0.55),
-  0 0 10px rgba(180,140,70,0.08);
-
-transition: transform 0.18s cubic-bezier(0.2, 0.9, 0.2, 1),
-            box-shadow 0.18s ease,
-            filter 0.18s ease;
-  animation: pulse 2.5s infinite;
-
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 800;
-  font-size: 30px;
-  letter-spacing: 3px;
-
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
+button, input{ font-family:'Montserrat',sans-serif; }
+button{ -webkit-tap-highlight-color:transparent; }
+button:focus-visible, input:focus-visible{
+  outline:3px solid rgba(247,241,227,.7);
+  outline-offset:4px;
 }
 
-/* aro exterior SOLO para el botón principal */
-button:not(.idioma-btn)::before{
-  content:'';
-  position:absolute;
-  top:-12px;
-  left:-12px;
-  width:360px;
-  height:360px;
-  border-radius:50%;
-  border: 1.5px solid rgba(184,140,70,0.28);
-}
-
-/* click */
-button:hover{
-  transform: translateY(-1.5px);
-}
-
-button:active{
-  transform: translateY(8px) scale(0.955);
-  
-  box-shadow:
-    inset 0 6px 14px rgba(255,255,255,0.18),
-    inset 0 -18px 25px rgba(0,0,0,0.45),
-    0 8px 20px rgba(0,0,0,0.55),
-    0 0 8px rgba(212,175,55,0.10);
-
-  filter: brightness(0.92) contrast(1.05);
-}
-  button:focus{
-  outline: none;
-}
-/* pulso */
-@keyframes pulse{
-  0%{
-    box-shadow:
-      inset 0 8px 15px rgba(255,255,255,0.35),
-      inset 0 -12px 20px rgba(0,0,0,0.25),
-      0 15px 40px rgba(0,0,0,0.6),
-      0 0 0 0 rgba(255,244,214,0.35);
-  }
-  70%{
-    box-shadow:
-      inset 0 8px 15px rgba(255,255,255,0.35),
-      inset 0 -12px 20px rgba(0,0,0,0.25),
-      0 15px 40px rgba(0,0,0,0.6),
-      0 0 0 30px rgba(255,244,214,0);
-  }
-  100%{
-    box-shadow:
-      inset 0 8px 15px rgba(255,255,255,0.35),
-      inset 0 -12px 20px rgba(0,0,0,0.25),
-      0 15px 40px rgba(0,0,0,0.6),
-      0 0 0 0 rgba(212,175,55,0);
-  }
-}
-
-/* CAMPANA */
-.campana{
-  display: inline-block;   /* IMPORTANTE */
-  font-size:52px;
-  margin-bottom:15px;
-  opacity:0.95;
-  line-height:1;
-  text-shadow:0 2px 10px rgba(0,0,0,0.25);
-
-  transform-origin: top center; /* punto de giro */
-}
-  .campana-sonando{
-  animation: sonarCampana 0.8s ease;
-}
-
-@keyframes sonarCampana{
-  0%   { transform: rotate(0deg); }
-  10%  { transform: rotate(-20deg); }
-  20%  { transform: rotate(20deg); }
-  30%  { transform: rotate(-18deg); }
-  40%  { transform: rotate(18deg); }
-  50%  { transform: rotate(-14deg); }
-  60%  { transform: rotate(14deg); }
-  70%  { transform: rotate(-8deg); }
-  80%  { transform: rotate(8deg); }
-  100% { transform: rotate(0deg); }
-}
-
-/* TEXTO */
-.texto-boton{
-  font-weight: 800;
-  font-size: 24px;
-  letter-spacing: 3px;
-  line-height: 1.15;
-  text-transform: uppercase;
-  text-align: center;
-  opacity: 0.95;
-}
-
-/* MENSAJE */
-#mensaje{
-  margin-top: 30px;
-  font-size: 20px;
-  color: #ffffff;
-  text-align: center;
-  font-weight: 600;
-  line-height: 1.6;
-  min-height: 50px;
-}
-
-/* ANIMACIÓN DE PUNTOS */
-.dots::after{
-  content:'';
-  display:inline-block;
-  animation: dots 1.2s infinite;
-}
-
-@keyframes dots{
-  0%   { content:''; }
-  25%  { content:'.'; }
-  50%  { content:'..'; }
-  75%  { content:'...'; }
-  100% { content:''; }
-}
-#pantallaIdioma{
-  display:flex;
+.pantalla{
+  display:none;
+  width:100%;
+  max-width:760px;
+  max-height:100dvh;
+  padding:28px 22px 120px;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   text-align:center;
-
-  width:100%;
-  max-width:500px;
-  padding:20px;
-
-  opacity:1;
-  transition: opacity .5s ease;
+  overflow-y:auto;
+  opacity:0;
+  transform:translateY(6px);
+  transition:opacity .28s ease, transform .28s ease;
 }
-#pantallaPrincipal{
+
+.pantalla.activa{
+  display:flex;
   opacity:1;
-  transition: opacity .5s ease;
-}
-.titulo-bienvenida{
-  font-size:34px;
-  font-weight:800;
-  letter-spacing:4px;
-  color:#f1d58a;
-  margin-bottom:25px;
-  text-shadow:0 0 20px rgba(241,213,138,0.3);
+  transform:translateY(0);
 }
 
 .texto-bienvenida{
-  font-size:38px;
+  font-size:clamp(30px,5vw,40px);
   font-weight:800;
   letter-spacing:2px;
   margin-bottom:18px;
-  color:white;
-  text-shadow:0 0 25px rgba(255,255,255,0.15);
+  color:#fff;
+  text-shadow:0 0 25px rgba(255,255,255,.15);
 }
 
-
-#tituloMenu{
-
-  font-size:24px;
-  text-align:center;
-  margin-bottom:30px;
-  width:100%;
-
+.titulo-seccion{
+  font-size:clamp(24px,4vw,34px);
+  font-weight:800;
+  letter-spacing:2px;
+  color:#f1d58a;
+  margin:0 0 12px;
+  text-shadow:0 0 20px rgba(241,213,138,.3);
 }
-  /* CENTRADO BOTONES DEL MENU */
-#btnAsistencia,
-#btnVuelo{
 
+.subtitulo-seccion{
+  max-width:560px;
+  margin:0 0 22px;
+  color:var(--texto-suave);
+  font-size:15px;
+  line-height:1.6;
+}
+
+.texto-seleccion{
+  font-size:17px;
+  margin-bottom:26px;
+  line-height:1.8;
+  color:var(--texto-suave);
+}
+
+/* Botones rectangulares del menú */
+.idioma-btn{
   display:flex;
   justify-content:center;
   align-items:center;
   text-align:center;
-
-  width:320px;
-  height:70px;
-
-  font-size:17px;
-  letter-spacing:1px;
-
-  line-height:1.1;
-
-
-}
-.texto-seleccion{
-  font-size:17px;
-  margin-bottom:35px;
-  line-height:1.8;
-  color:rgba(255,255,255,0.75);
-}
-
-.idioma-btn{
-border: 1px solid rgba(255,255,255,0.15);
-transition: all 0.25s ease;
-box-shadow:
-  inset 0 8px 15px rgba(255,255,255,0.35),
-  inset 0 -12px 20px rgba(0,0,0,0.25),
-  0 10px 25px rgba(0,0,0,0.5),
-  0 0 15px rgba(241,213,138,0.20);
-
-  transform: translateZ(0);
-will-change: transform;
-  
-  width:320px;
-  height:90px;
-
-  margin:15px;
-
-  border:none;
+  width:min(320px,88vw);
+  min-height:78px;
+  margin:11px;
+  padding:15px 22px;
+  border:1px solid rgba(255,255,255,.15);
   border-radius:18px;
-
-  background:
-    radial-gradient(circle at 30% 30%,
-    #fff4d6 0%,
-    #d6b56d 20%,
-    #9d7a35 55%,
-    #5b451d 100%);
-
+  background:radial-gradient(circle at 30% 30%, #fff4d6 0%, #d6b56d 20%, #9d7a35 55%, #5b451d 100%);
   color:#1a1a1a;
-
-  font-family:'Montserrat',sans-serif;
-  font-size:26px;
+  font-size:clamp(18px,3vw,25px);
   font-weight:800;
-  letter-spacing:2px;
-
+  letter-spacing:1.5px;
+  line-height:1.2;
   cursor:pointer;
-
   box-shadow:
-    inset 0 8px 15px rgba(255,255,255,0.35),
-    inset 0 -12px 20px rgba(0,0,0,0.25),
-    0 10px 25px rgba(0,0,0,0.5);
-
-  transition:all .2s ease;
-
-}
-
-.idioma-btn:active{
-  transform:scale(0.97);
-}
-
-  .idioma-btn:hover{
-  transform: translateY(-3px);
-}
-  
-#volverIdiomaMenu,
-#volverIdiomaAsistencia{
-  margin-top:50px;
-  font-size:16px;
-  color:rgba(255,255,255,0.8);
-  cursor:pointer;
-  transition:.2s;
+    inset 0 8px 15px rgba(255,255,255,.35),
+    inset 0 -12px 20px rgba(0,0,0,.25),
+    0 10px 25px rgba(0,0,0,.5),
+    0 0 15px rgba(241,213,138,.20);
+  transition:transform .2s ease, filter .2s ease;
   user-select:none;
 }
-#volverIdioma:hover{
+
+.idioma-btn:hover{ transform:translateY(-3px); }
+.idioma-btn:active{ transform:translateY(2px) scale(.97); filter:brightness(.93); }
+.idioma-btn:disabled{ opacity:.58; cursor:wait; transform:none; }
+
+/* Botón circular de asistencia */
+.boton-asistencia{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  position:relative;
+  width:min(340px,78vw);
+  height:min(340px,78vw);
+  max-width:340px;
+  max-height:340px;
+  min-width:270px;
+  min-height:270px;
+  border-radius:50%;
+  border:1.5px solid rgba(255,244,214,.35);
+  background:radial-gradient(circle at 30% 25%, #f7f1e3 0%, #d8b878 20%, #b88a4a 45%, #8a6436 75%, #3b2a16 100%);
+  color:#1a1a1a;
+  cursor:pointer;
+  box-shadow:
+    inset 0 8px 14px rgba(255,255,255,.14),
+    inset 0 -12px 18px rgba(0,0,0,.28),
+    0 16px 35px rgba(0,0,0,.55),
+    0 0 10px rgba(180,140,70,.08);
+  animation:pulse 2.5s infinite;
+  transition:transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease, filter .18s ease;
+  user-select:none;
+}
+
+.boton-asistencia::before{
+  content:"";
+  position:absolute;
+  inset:-12px;
+  border-radius:50%;
+  border:1.5px solid rgba(184,140,70,.28);
+  pointer-events:none;
+}
+
+.boton-asistencia:hover{ transform:translateY(-2px); }
+.boton-asistencia:active{
+  transform:translateY(8px) scale(.955);
+  box-shadow:
+    inset 0 6px 14px rgba(255,255,255,.18),
+    inset 0 -18px 25px rgba(0,0,0,.45),
+    0 8px 20px rgba(0,0,0,.55);
+  filter:brightness(.92) contrast(1.05);
+}
+
+@keyframes pulse{
+  0%,100%{
+    box-shadow:
+      inset 0 8px 15px rgba(255,255,255,.35),
+      inset 0 -12px 20px rgba(0,0,0,.25),
+      0 15px 40px rgba(0,0,0,.6),
+      0 0 0 0 rgba(255,244,214,.35);
+  }
+  70%{
+    box-shadow:
+      inset 0 8px 15px rgba(255,255,255,.35),
+      inset 0 -12px 20px rgba(0,0,0,.25),
+      0 15px 40px rgba(0,0,0,.6),
+      0 0 0 30px rgba(255,244,214,0);
+  }
+}
+
+.campana{
+  display:inline-block;
+  font-size:52px;
+  margin-bottom:15px;
+  opacity:.95;
+  line-height:1;
+  text-shadow:0 2px 10px rgba(0,0,0,.25);
+  transform-origin:top center;
+}
+
+.campana-sonando{ animation:sonarCampana .8s ease; }
+
+@keyframes sonarCampana{
+  0%,100%{ transform:rotate(0deg); }
+  10%{ transform:rotate(-20deg); }
+  20%{ transform:rotate(20deg); }
+  30%{ transform:rotate(-18deg); }
+  40%{ transform:rotate(18deg); }
+  50%{ transform:rotate(-14deg); }
+  60%{ transform:rotate(14deg); }
+  70%{ transform:rotate(-8deg); }
+  80%{ transform:rotate(8deg); }
+}
+
+.texto-boton{
+  font-weight:800;
+  font-size:24px;
+  letter-spacing:3px;
+  line-height:1.15;
+  text-transform:uppercase;
+  opacity:.95;
+}
+
+#mensaje{
+  margin-top:30px;
+  min-height:58px;
+  font-size:20px;
+  color:#fff;
+  text-align:center;
+  font-weight:600;
+  line-height:1.6;
+}
+
+.dots::after{
+  content:"";
+  display:inline-block;
+  width:28px;
+  text-align:left;
+  animation:dots 1.2s infinite;
+}
+
+@keyframes dots{
+  0%,100%{ content:""; }
+  25%{ content:"."; }
+  50%{ content:".."; }
+  75%{ content:"..."; }
+}
+
+.enlace-secundario{
+  margin-top:34px;
+  padding:12px 18px;
+  color:rgba(255,255,255,.82);
+  font-size:16px;
+  cursor:pointer;
+  transition:color .2s ease, transform .2s ease;
+  user-select:none;
+}
+
+.enlace-secundario:hover{ color:#f1d58a; transform:translateY(-1px); }
+
+/* Consulta de vuelo */
+.consulta-panel{
+  width:min(620px,94vw);
+  padding:25px;
+  border:1px solid var(--borde);
+  border-radius:26px;
+  background:linear-gradient(145deg, rgba(32,25,15,.90), rgba(10,8,5,.84));
+  box-shadow:0 22px 60px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(10px);
+}
+
+.input-vuelo{
+  width:min(410px,100%);
+  height:62px;
+  padding:0 18px;
+  border:1px solid rgba(241,213,138,.45);
+  border-radius:16px;
+  background:rgba(255,255,255,.95);
+  color:#17120b;
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:2px;
+  text-align:center;
+  text-transform:uppercase;
+  box-shadow:inset 0 2px 7px rgba(0,0,0,.15);
+}
+
+.input-vuelo::placeholder{
+  color:rgba(30,24,16,.48);
+  font-size:18px;
+  letter-spacing:.5px;
+  text-transform:none;
+}
+
+.buscar-btn{
+  width:min(410px,100%);
+  min-height:64px;
+  margin:16px auto 0;
+  font-size:19px;
+}
+
+#resultadoVuelo{
+  width:100%;
+  margin-top:20px;
+  min-height:42px;
+}
+
+.cargando-vuelo{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  padding:20px 10px 8px;
+  color:#fff;
+  font-size:17px;
+}
+
+.avion-cargando{
+  font-size:38px;
+  animation:flotar 1.2s ease-in-out infinite;
+}
+
+@keyframes flotar{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-7px); }
+}
+
+.mensaje-resultado{
+  padding:20px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.28);
+  line-height:1.55;
+}
+
+.mensaje-resultado strong{
+  display:block;
   color:#f1d58a;
+  font-size:19px;
+  margin-bottom:5px;
 }
 
-/* LOGO */
+.tarjeta-vuelo{
+  overflow:hidden;
+  text-align:left;
+  border:1px solid rgba(241,213,138,.38);
+  border-radius:22px;
+  background:linear-gradient(150deg, rgba(255,255,255,.10), rgba(0,0,0,.32));
+  box-shadow:0 18px 40px rgba(0,0,0,.34);
+}
+
+.cabecera-vuelo{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  padding:22px;
+  border-bottom:1px solid rgba(241,213,138,.20);
+  background:linear-gradient(110deg, rgba(216,184,120,.20), rgba(0,0,0,.10));
+}
+
+.identidad-vuelo{ min-width:0; }
+.aerolinea{
+  color:rgba(255,255,255,.72);
+  font-size:13px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.codigo-vuelo{
+  margin-top:3px;
+  color:#fff4d6;
+  font-size:clamp(30px,7vw,42px);
+  font-weight:800;
+  letter-spacing:2px;
+}
+
+.estado-pill{
+  flex:0 0 auto;
+  max-width:48%;
+  padding:9px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+  line-height:1.2;
+  text-align:center;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  border:1px solid rgba(255,255,255,.22);
+}
+
+.estado-verde{ background:rgba(41,154,89,.28); color:#c8ffdc; }
+.estado-amarillo{ background:rgba(224,179,45,.26); color:#fff0ac; }
+.estado-naranja{ background:rgba(224,117,38,.28); color:#ffd4b6; }
+.estado-rojo{ background:rgba(205,58,58,.30); color:#ffd0d0; }
+.estado-neutro{ background:rgba(170,170,170,.20); color:#f2f2f2; }
+
+.datos-vuelo{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:1px;
+  background:rgba(241,213,138,.16);
+}
+
+.dato-vuelo{
+  min-height:94px;
+  padding:17px 18px;
+  background:rgba(12,10,7,.88);
+}
+
+.dato-etiqueta{
+  color:rgba(255,255,255,.60);
+  font-size:12px;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  margin-bottom:7px;
+}
+
+.dato-valor{
+  color:#fff;
+  font-size:19px;
+  font-weight:800;
+  line-height:1.25;
+  overflow-wrap:anywhere;
+}
+
+.pie-vuelo{
+  padding:14px 18px 17px;
+  color:rgba(255,255,255,.60);
+  font-size:11px;
+  line-height:1.45;
+  text-align:center;
+  border-top:1px solid rgba(241,213,138,.16);
+  background:rgba(0,0,0,.22);
+}
+
 .logo-vip{
-  position: fixed;
-  bottom: 25px;
-  right: 15px;
-  width: 450px;
-  opacity: 0.65;
-  pointer-events: none;
+  position:fixed;
+  bottom:20px;
+  right:14px;
+  width:min(450px,48vw);
+  opacity:.65;
+  pointer-events:none;
+  z-index:-0;
 }
 
+@media (max-width:520px){
+  .pantalla{ padding:22px 14px 90px; justify-content:flex-start; padding-top:8vh; }
+  .consulta-panel{ padding:19px 15px; }
+  .cabecera-vuelo{ align-items:flex-start; flex-direction:column; }
+  .estado-pill{ max-width:100%; }
+  .datos-vuelo{ grid-template-columns:1fr; }
+  .boton-asistencia{ min-width:250px; min-height:250px; }
+}
+
+@media (max-height:700px){
+  .pantalla{ justify-content:flex-start; padding-top:28px; }
+  .boton-asistencia{ width:270px; height:270px; min-width:270px; min-height:270px; }
+  .campana{ font-size:44px; }
+  .texto-boton{ font-size:20px; }
+}
 </style>
 </head>
 
 <body>
-
-<!-- 🔔 AUDIO -->
 <audio id="sonidoVip" src="assets/campana-vip.mp3" preload="auto"></audio>
 
 <!-- PANTALLA DE IDIOMA -->
-<div id="pantallaIdioma">
-  <div class="texto-bienvenida">
-    Bienvenido<br>
-    Welcome
-  </div>
+<section id="pantallaIdioma" class="pantalla activa" aria-label="Selección de idioma">
+  <div class="texto-bienvenida">Bienvenido<br>Welcome</div>
+  <div class="texto-seleccion">🌍 Seleccione su idioma<br>🌍 Select your language</div>
+  <button type="button" class="idioma-btn" onclick="seleccionarIdioma('es')">ESPAÑOL</button>
+  <button type="button" class="idioma-btn" onclick="seleccionarIdioma('en')">ENGLISH</button>
+</section>
 
-  <div class="texto-seleccion">
-  🌍 Seleccione su idioma<br>
-  🌍 Select your language
-</div>
-  <button class="idioma-btn" onclick="seleccionarIdioma('es')">
-    ESPAÑOL
-  </button>
+<!-- PANTALLA MENÚ -->
+<section id="pantallaMenu" class="pantalla" aria-label="Menú principal">
+  <div class="titulo-seccion" id="tituloMenu">Seleccione una opción</div>
+  <button type="button" class="idioma-btn" onclick="mostrarAsistencia()" id="btnAsistencia">🛎️ SOLICITAR ASISTENCIA</button>
+  <button type="button" class="idioma-btn" onclick="mostrarConsultaVuelo()" id="btnVuelo">✈️ CONSULTAR VUELO</button>
+  <div id="volverIdiomaMenu" class="enlace-secundario" onclick="volverIdioma()" role="button" tabindex="0">🌐 Cambiar idioma</div>
+</section>
 
-  <button class="idioma-btn" onclick="seleccionarIdioma('en')">
-    ENGLISH
-  </button>
-
-</div>
-
-<!-- PANTALLA PRINCIPAL -->
-<div id="pantallaAsistencia" style="display:none; flex-direction:column; align-items:center;">
-
-  <button onclick="enviarSolicitud()">
+<!-- PANTALLA ASISTENCIA -->
+<section id="pantallaAsistencia" class="pantalla" aria-label="Solicitar asistencia">
+  <button type="button" class="boton-asistencia" onclick="enviarSolicitud()" id="botonAsistenciaGrande">
     <span class="campana">🛎️</span>
     <span class="texto-boton">SOLICITAR<br>ASISTENCIA</span>
-  
   </button>
-  
+  <div id="mensaje" aria-live="polite"></div>
+  <div id="volverAsistenciaMenu" class="enlace-secundario" onclick="volverMenu()" role="button" tabindex="0">⬅️ Volver</div>
+  <div id="volverIdiomaAsistencia" class="enlace-secundario" onclick="volverIdioma()" role="button" tabindex="0">🌐 Cambiar idioma</div>
+</section>
 
-  <div id="mensaje"></div>
+<!-- PANTALLA CONSULTA VUELO -->
+<section id="pantallaVuelo" class="pantalla" aria-label="Consulta de vuelo">
+  <div class="consulta-panel">
+    <h1 class="titulo-seccion" id="tituloVuelo">Consultar vuelo</h1>
+    <p class="subtitulo-seccion" id="subtituloVuelo">Ingrese el número de vuelo para consultar la información publicada por Lima Airport.</p>
 
-  <div id="volverIdiomaAsistencia" onclick="volverIdioma()">
-🌐 Cambiar idioma
-</div>
+    <input
+      id="numeroVuelo"
+      class="input-vuelo"
+      type="text"
+      inputmode="text"
+      autocomplete="off"
+      autocapitalize="characters"
+      spellcheck="false"
+      maxlength="10"
+      placeholder="Ejemplo: LA2075"
+      aria-label="Número de vuelo">
 
-</div>
-<!-- PANTALLA MENÚ -->
-<div id="pantallaMenu"
-style="
-display:none;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-text-align:center;
-">
+    <button type="button" class="idioma-btn buscar-btn" id="btnBuscarVuelo" onclick="buscarVuelo()">🔎 BUSCAR VUELO</button>
 
-<div class="texto-bienvenida" id="tituloMenu">
-Seleccione una opción
-</div>
+    <div id="resultadoVuelo" aria-live="polite"></div>
+  </div>
 
-<button class="idioma-btn" onclick="mostrarAsistencia()" id="btnAsistencia">
-🛎️ SOLICITAR ASISTENCIA
-</button>
+  <div id="volverVuelo" class="enlace-secundario" onclick="volverMenu()" role="button" tabindex="0">⬅️ Volver</div>
+  <div id="volverIdiomaVuelo" class="enlace-secundario" onclick="volverIdioma()" role="button" tabindex="0">🌐 Cambiar idioma</div>
+</section>
 
-<button class="idioma-btn" onclick="mostrarConsultaVuelo()" id="btnVuelo">
-✈️ CONSULTAR VUELO
-</button>
-
-<div id="volverIdiomaMenu" onclick="volverIdioma()">
-🌐 Cambiar idioma
-</div>
-
-</div>
-
-  <!-- PANTALLA CONSULTA VUELO -->
-
-<div id="pantallaVuelo"
-style="
-display:none;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-text-align:center;
-">
-
-<div class="texto-bienvenida" id="tituloVuelo">
-Consultar vuelo
-</div>
-
-<input
-id="numeroVuelo"
-placeholder="Ejemplo: LA2075"
-style="
-width:300px;
-height:55px;
-border-radius:15px;
-border:none;
-font-size:22px;
-text-align:center;
-font-family:Montserrat;
-margin:20px;
-">
-
-<button
-class="idioma-btn"
-onclick="buscarVuelo()">
-
-🔎 BUSCAR VUELO
-
-</button>
-
-<div id="resultadoVuelo"
-style="
-margin-top:25px;
-font-size:18px;
-line-height:1.8;
-">
-</div>
-
-<div
-id="volverVuelo"
-onclick="volverMenu()"
-style="
-margin-top:50px;
-font-size:16px;
-cursor:pointer;
-">
-
-⬅️ Volver
-
-</div>
-
-</div>
-
-<img src="assets/logo-alturas-transparente.png" class="logo-vip">
+<img src="assets/logo-alturas-transparente.png" class="logo-vip" alt="">
 
 <script>
-  
+"use strict";
 
 const mesa = 7;
+const URL_ASISTENCIA = "https://script.google.com/macros/s/AKfycbxU5N9gvYgnr6ziPolPuPircfFdsRzLgCfVqntC8WGwZ-wath6i5o1dUuAfPFcBVJh2/exec";
+const API_VUELOS = "https://s17.lima-airport.com/api/v2/flights/v2";
+
+let idiomaActual = "es";
 let enviando = false;
+let buscandoVuelo = false;
+let controladorBusqueda = null;
+
+const textos = {
+  es: {
+    menuTitle: "Seleccione una opción",
+    assistanceMenu: "🛎️ SOLICITAR ASISTENCIA",
+    flightMenu: "✈️ CONSULTAR VUELO",
+    changeLanguage: "🌐 Cambiar idioma",
+    back: "⬅️ Volver",
+    requestButton: "SOLICITAR<br>ASISTENCIA",
+    sending: "Enviando solicitud",
+    thanks: "✨ Gracias.<br>Nuestro personal acudirá en breve.",
+    connectionError: "❌ Error de conexión",
+    flightTitle: "Consultar vuelo",
+    flightSubtitle: "Ingrese el número de vuelo para consultar la información publicada por Lima Airport.",
+    placeholder: "Ejemplo: LA2075",
+    search: "🔎 BUSCAR VUELO",
+    searching: "Consultando vuelo",
+    invalidTitle: "Ingrese un vuelo válido",
+    invalidText: "Escriba el código de la aerolínea y el número de vuelo. Por ejemplo: LA2075.",
+    notFoundTitle: "No se encontró el vuelo",
+    notFoundText: "Verifique el número e intente nuevamente. La consulta muestra los vuelos publicados para hoy.",
+    apiErrorTitle: "No se pudo consultar el vuelo",
+    apiErrorText: "Revise la conexión a Internet e intente nuevamente.",
+    flight: "Vuelo",
+    status: "Estado",
+    time: "Hora programada",
+    estimated: "Hora estimada/real",
+    destination: "Destino",
+    origin: "Origen",
+    gate: "Puerta",
+    belt: "Faja",
+    terminal: "Terminal",
+    operation: "Operación",
+    departure: "Salida",
+    arrival: "Llegada",
+    domestic: "Nacional",
+    international: "Internacional",
+    unavailable: "Por confirmar",
+    updated: "Consulta realizada",
+    disclaimer: "Información referencial sujeta a cambios operativos. Confirme también en las pantallas del aeropuerto o con la aerolínea."
+  },
+  en: {
+    menuTitle: "Select an option",
+    assistanceMenu: "🛎️ REQUEST ASSISTANCE",
+    flightMenu: "✈️ FLIGHT INFORMATION",
+    changeLanguage: "🌐 Change language",
+    back: "⬅️ Back",
+    requestButton: "REQUEST<br>ASSISTANCE",
+    sending: "Sending request",
+    thanks: "✨ Thank you.<br>Our staff will assist you shortly.",
+    connectionError: "❌ Connection error",
+    flightTitle: "Flight information",
+    flightSubtitle: "Enter the flight number to check the information published by Lima Airport.",
+    placeholder: "Example: LA2075",
+    search: "🔎 SEARCH FLIGHT",
+    searching: "Searching flight",
+    invalidTitle: "Enter a valid flight",
+    invalidText: "Enter the airline code and flight number. For example: LA2075.",
+    notFoundTitle: "Flight not found",
+    notFoundText: "Check the number and try again. The search shows flights published for today.",
+    apiErrorTitle: "Unable to check the flight",
+    apiErrorText: "Check the Internet connection and try again.",
+    flight: "Flight",
+    status: "Status",
+    time: "Scheduled time",
+    estimated: "Estimated/actual time",
+    destination: "Destination",
+    origin: "Origin",
+    gate: "Gate",
+    belt: "Baggage belt",
+    terminal: "Terminal",
+    operation: "Operation",
+    departure: "Departure",
+    arrival: "Arrival",
+    domestic: "Domestic",
+    international: "International",
+    unavailable: "To be confirmed",
+    updated: "Checked at",
+    disclaimer: "Information is subject to operational changes. Please also confirm on airport screens or with the airline."
+  }
+};
+
+const pantallas = ["pantallaIdioma", "pantallaMenu", "pantallaAsistencia", "pantallaVuelo"];
+
+function t(clave){
+  return textos[idiomaActual][clave] || clave;
+}
+
+function mostrarPantalla(id){
+  pantallas.forEach((pantallaId) => {
+    const elemento = document.getElementById(pantallaId);
+    elemento.classList.toggle("activa", pantallaId === id);
+  });
+
+  const activa = document.getElementById(id);
+  activa.scrollTop = 0;
+}
 
 function seleccionarIdioma(idioma){
-
-  const idiomaDiv = document.getElementById("pantallaIdioma");
-  const principalDiv = document.getElementById("pantallaMenu");
-  const textoBoton = document.querySelector(".texto-boton");
-  
-  const tituloMenu = document.getElementById("tituloMenu");
-  const btnAsistencia = document.getElementById("btnAsistencia");
-  const btnVuelo = document.getElementById("btnVuelo");
-
-  const lblVolverMenu = document.getElementById("volverIdiomaMenu");
-  const volverAsistencia = document.getElementById("volverIdiomaAsistencia");
-
-
-if(idioma === "en"){
-
-    lblVolverMenu.innerHTML = "🌐 Change Language";
-    volverAsistencia.innerHTML = "🌐 Change Language";
-
-    textoBoton.innerHTML = "REQUEST<br>ASSISTANCE";
-
-    tituloMenu.innerHTML = "Select an option";
-
-    btnAsistencia.innerHTML = "🛎️ REQUEST ASSISTANCE";
-
-    btnVuelo.innerHTML = "✈️ FLIGHT INFORMATION";
-
-}else{
-
-    lblVolverMenu.innerHTML = "🌐 Cambiar idioma";
-    volverAsistencia.innerHTML = "🌐 Cambiar idioma";
-
-    textoBoton.innerHTML = "SOLICITAR<br>ASISTENCIA";
-
-    tituloMenu.innerHTML = "Seleccione una opción";
-
-    btnAsistencia.innerHTML = "🛎️ SOLICITAR ASISTENCIA";
-
-    btnVuelo.innerHTML = "✈️ CONSULTAR VUELO";
-
+  idiomaActual = idioma === "en" ? "en" : "es";
+  document.documentElement.lang = idiomaActual;
+  actualizarTextos();
+  limpiarConsultaVuelo();
+  mostrarPantalla("pantallaMenu");
 }
 
-
-  idiomaDiv.style.opacity = "0";
-
-  setTimeout(() => {
-
-    idiomaDiv.style.display = "none";
-
-    principalDiv.style.display = "flex";
-
-    principalDiv.style.opacity = "0";
-
-    setTimeout(() => {
-      principalDiv.style.opacity = "1";
-    }, 50);
-
-  }, 500);
-
+function actualizarTextos(){
+  document.getElementById("tituloMenu").textContent = t("menuTitle");
+  document.getElementById("btnAsistencia").textContent = t("assistanceMenu");
+  document.getElementById("btnVuelo").textContent = t("flightMenu");
+  document.getElementById("volverIdiomaMenu").textContent = t("changeLanguage");
+  document.getElementById("volverIdiomaAsistencia").textContent = t("changeLanguage");
+  document.getElementById("volverIdiomaVuelo").textContent = t("changeLanguage");
+  document.getElementById("volverAsistenciaMenu").textContent = t("back");
+  document.getElementById("volverVuelo").textContent = t("back");
+  document.querySelector(".texto-boton").innerHTML = t("requestButton");
+  document.getElementById("tituloVuelo").textContent = t("flightTitle");
+  document.getElementById("subtituloVuelo").textContent = t("flightSubtitle");
+  document.getElementById("numeroVuelo").placeholder = t("placeholder");
+  document.getElementById("numeroVuelo").setAttribute("aria-label", t("flight"));
+  document.getElementById("btnBuscarVuelo").textContent = t("search");
 }
+
 function volverIdioma(){
-
-  const idiomaDiv = document.getElementById("pantallaIdioma");
-  const menuDiv = document.getElementById("pantallaMenu");
-  const asistenciaDiv = document.getElementById("pantallaAsistencia");
-
-  // ocultar todo
-  menuDiv.style.display = "none";
-  asistenciaDiv.style.display = "none";
-
-  // mostrar idiomas
-  idiomaDiv.style.display = "flex";
-
-  idiomaDiv.style.opacity = "0";
-
-  setTimeout(() => {
-    idiomaDiv.style.opacity = "1";
-  },50);
-
+  cancelarBusqueda();
+  document.getElementById("mensaje").innerHTML = "";
+  enviando = false;
+  limpiarConsultaVuelo();
+  mostrarPantalla("pantallaIdioma");
 }
-function enviarSolicitud(){
 
+function volverMenu(){
+  cancelarBusqueda();
+  document.getElementById("mensaje").innerHTML = "";
+  enviando = false;
+  limpiarConsultaVuelo();
+  mostrarPantalla("pantallaMenu");
+}
+
+function mostrarAsistencia(){
+  document.getElementById("mensaje").innerHTML = "";
+  mostrarPantalla("pantallaAsistencia");
+}
+
+function mostrarConsultaVuelo(){
+  limpiarConsultaVuelo();
+  mostrarPantalla("pantallaVuelo");
+  window.setTimeout(() => document.getElementById("numeroVuelo").focus(), 250);
+}
+
+function enviarSolicitud(){
   if(enviando) return;
   enviando = true;
 
   const audio = document.getElementById("sonidoVip");
   audio.currentTime = 0;
-  audio.play().catch(()=>{});
-  const campana = document.querySelector(".campana");
+  audio.play().catch(() => {});
 
-campana.classList.remove("campana-sonando");
-void campana.offsetWidth; // reinicia animación
-campana.classList.add("campana-sonando");
+  const campana = document.querySelector(".campana");
+  campana.classList.remove("campana-sonando");
+  void campana.offsetWidth;
+  campana.classList.add("campana-sonando");
 
   const msg = document.getElementById("mensaje");
-
   msg.classList.add("dots");
+  msg.textContent = t("sending");
 
-  if(document.querySelector(".texto-boton").innerHTML.includes("REQUEST")){
-    msg.innerHTML = "Sending request";
-  }else{
-    msg.innerHTML = "Enviando solicitud";
+  fetch(`${URL_ASISTENCIA}?mesa=${encodeURIComponent(mesa)}`)
+    .then(() => {
+      msg.classList.remove("dots");
+      msg.innerHTML = t("thanks");
+
+      window.setTimeout(() => {
+        msg.innerHTML = "";
+        enviando = false;
+        volverIdioma();
+      }, 5000);
+    })
+    .catch(() => {
+      msg.classList.remove("dots");
+      msg.textContent = t("connectionError");
+
+      window.setTimeout(() => {
+        msg.innerHTML = "";
+        enviando = false;
+      }, 3000);
+    });
+}
+
+function normalizarNumeroVuelo(valor){
+  return String(valor || "")
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, "")
+    .slice(0, 9);
+}
+
+function vueloValido(numero){
+  return numero.length >= 3 && numero.length <= 9 && /[A-Z]/.test(numero) && /\d/.test(numero);
+}
+
+function limpiarConsultaVuelo(){
+  document.getElementById("numeroVuelo").value = "";
+  document.getElementById("resultadoVuelo").innerHTML = "";
+  document.getElementById("btnBuscarVuelo").disabled = false;
+  buscandoVuelo = false;
+}
+
+function cancelarBusqueda(){
+  if(controladorBusqueda){
+    controladorBusqueda.abort();
+    controladorBusqueda = null;
+  }
+  buscandoVuelo = false;
+  const boton = document.getElementById("btnBuscarVuelo");
+  if(boton) boton.disabled = false;
+}
+
+async function buscarVuelo(){
+  if(buscandoVuelo) return;
+
+  const input = document.getElementById("numeroVuelo");
+  const numero = normalizarNumeroVuelo(input.value);
+  input.value = numero;
+
+  if(!vueloValido(numero)){
+    mostrarMensajeVuelo(t("invalidTitle"), t("invalidText"));
+    input.focus();
+    return;
   }
 
-  fetch("https://script.google.com/macros/s/AKfycbxU5N9gvYgnr6ziPolPuPircfFdsRzLgCfVqntC8WGwZ-wath6i5o1dUuAfPFcBVJh2/exec?mesa=" + mesa)
+  buscandoVuelo = true;
+  document.getElementById("btnBuscarVuelo").disabled = true;
+  mostrarCargandoVuelo();
 
-  .then(() => {
+  cancelarBusqueda();
+  buscandoVuelo = true;
+  document.getElementById("btnBuscarVuelo").disabled = true;
+  controladorBusqueda = new AbortController();
+  const temporizador = window.setTimeout(() => controladorBusqueda.abort(), 12000);
 
-    msg.classList.remove("dots");
+  const categorias = [
+    { adi:"departures", scope:"domestic", tipo:"departure", trafico:"domestic" },
+    { adi:"departures", scope:"international", tipo:"departure", trafico:"international" },
+    { adi:"arrivals", scope:"domestic", tipo:"arrival", trafico:"domestic" },
+    { adi:"arrivals", scope:"international", tipo:"arrival", trafico:"international" }
+  ];
 
-    if(document.querySelector(".texto-boton").innerHTML.includes("REQUEST")){
-  msg.innerHTML = "✨ Thank you.<br>Our staff will assist you shortly.";
-}else{
-  msg.innerHTML = "✨ Gracias.<br>Nuestro personal acudirá en breve.";
-}
+  try{
+    const respuestas = await Promise.allSettled(
+      categorias.map((categoria) => consultarCategoria(categoria, numero, controladorBusqueda.signal))
+    );
 
-   setTimeout(() => {
+    const exitosas = respuestas.filter((respuesta) => respuesta.status === "fulfilled");
+    const vuelos = exitosas.flatMap((respuesta) => respuesta.value);
 
-  msg.innerHTML = "";
-
-  volverIdioma();
-
-  enviando = false;
-
-}, 5000);
-
-  })
-
-  .catch(() => {
-
-    msg.classList.remove("dots");
-
-    if(document.querySelector(".texto-boton").innerHTML.includes("REQUEST")){
-      msg.innerHTML = "❌ Connection error";
-    }else{
-      msg.innerHTML = "❌ Error de conexión";
+    if(vuelos.length === 0){
+      if(exitosas.length === 0){
+        mostrarMensajeVuelo(t("apiErrorTitle"), t("apiErrorText"));
+      }else{
+        mostrarMensajeVuelo(t("notFoundTitle"), t("notFoundText"));
+      }
+      return;
     }
 
-    setTimeout(() => {
-      msg.innerHTML = "";
-      enviando = false;
-    }, 3000);
+    const vuelo = seleccionarMejorCoincidencia(vuelos, numero);
+    mostrarTarjetaVuelo(vuelo);
+  }catch(error){
+    if(error.name !== "AbortError"){
+      console.error("Error al consultar vuelo:", error);
+    }
+    mostrarMensajeVuelo(t("apiErrorTitle"), t("apiErrorText"));
+  }finally{
+    window.clearTimeout(temporizador);
+    controladorBusqueda = null;
+    buscandoVuelo = false;
+    document.getElementById("btnBuscarVuelo").disabled = false;
+  }
+}
 
+async function consultarCategoria(categoria, numero, signal){
+  const parametros = new URLSearchParams({
+    day:"today",
+    adi:categoria.adi,
+    scope:categoria.scope,
+    lang:"es",
+    search:numero
   });
 
+  const respuesta = await fetch(`${API_VUELOS}?${parametros.toString()}`, {
+    method:"GET",
+    cache:"no-store",
+    signal
+  });
+
+  if(!respuesta.ok){
+    throw new Error(`API LAP respondió ${respuesta.status}`);
+  }
+
+  const datos = await respuesta.json();
+  if(!Array.isArray(datos)) return [];
+
+  return datos.map((vuelo) => ({
+    ...vuelo,
+    _tipo:categoria.tipo,
+    _trafico:categoria.trafico
+  }));
 }
-function mostrarAsistencia(){
 
-  document.getElementById("pantallaMenu").style.display = "none";
+function seleccionarMejorCoincidencia(vuelos, numeroBuscado){
+  const normalizado = (valor) => normalizarNumeroVuelo(valor);
 
-  document.getElementById("pantallaAsistencia").style.display = "flex";
-
+  return vuelos.find((vuelo) => normalizado(vuelo.cod_vuelo) === numeroBuscado)
+    || vuelos.find((vuelo) => normalizado(vuelo.cod_vuelo_op) === numeroBuscado)
+    || vuelos[0];
 }
 
-function mostrarConsultaVuelo(){
-
-document.getElementById("pantallaMenu").style.display="none";
-
-document.getElementById("pantallaVuelo").style.display="flex";
-
+function mostrarCargandoVuelo(){
+  document.getElementById("resultadoVuelo").innerHTML = `
+    <div class="cargando-vuelo">
+      <div class="avion-cargando">✈️</div>
+      <div class="dots">${escapeHtml(t("searching"))}</div>
+    </div>`;
 }
- function volverMenu(){
 
-    document.getElementById("pantallaVuelo").style.display = "none";
-
-    document.getElementById("pantallaAsistencia").style.display = "none";
-
-    document.getElementById("pantallaIdioma").style.display = "none";
-
-    document.getElementById("pantallaMenu").style.display = "flex";
-
+function mostrarMensajeVuelo(titulo, mensaje){
+  document.getElementById("resultadoVuelo").innerHTML = `
+    <div class="mensaje-resultado">
+      <strong>${escapeHtml(titulo)}</strong>
+      <span>${escapeHtml(mensaje)}</span>
+    </div>`;
 }
-  function buscarVuelo(){
 
-alert("Conectando con la API de LAP...");
+function mostrarTarjetaVuelo(vuelo){
+  const codigo = vuelo.cod_vuelo || vuelo.cod_vuelo_op || t("unavailable");
+  const aerolinea = vuelo.abr_aerolinea || vuelo.cod_aerolinea || t("unavailable");
+  const estadoOriginal = vuelo.dsc_observacion || vuelo.dsc_estado || "";
+  const estado = traducirEstado(estadoOriginal);
+  const claseEstado = obtenerClaseEstado(estadoOriginal);
 
+  const ciudad = vuelo.dsc_prc_dest || vuelo.cod_prc_dest || t("unavailable");
+  const etiquetaCiudad = vuelo._tipo === "arrival" ? t("origin") : t("destination");
+
+  const horaProgramada = formatearHora(vuelo.hra_prog || vuelo.fch_hra_prog);
+  const horaActualizada = formatearHora(vuelo.fch_hra_real || vuelo.fch_hra_ult || vuelo.fch_hra_est);
+  const mostrarHoraActualizada = horaActualizada !== t("unavailable") && horaActualizada !== horaProgramada;
+
+  const puerta = primerValor(vuelo.num_puerta_1, vuelo.num_puerta_2);
+  const faja = primerValor(vuelo.num_faja_1, vuelo.num_faja_2);
+  const terminal = vuelo.num_term_pasajero || vuelo.num_term_aeronave || t("unavailable");
+  const operacion = `${vuelo._tipo === "arrival" ? t("arrival") : t("departure")} · ${vuelo._trafico === "international" ? t("international") : t("domestic")}`;
+
+  const datos = [
+    { etiqueta:etiquetaCiudad, valor:ciudad },
+    { etiqueta:t("time"), valor:horaProgramada },
+    { etiqueta:t("gate"), valor:puerta || t("unavailable") },
+    { etiqueta:t("terminal"), valor:terminal },
+    { etiqueta:t("operation"), valor:operacion }
+  ];
+
+  if(mostrarHoraActualizada){
+    datos.splice(2, 0, { etiqueta:t("estimated"), valor:horaActualizada });
+  }
+
+  if(faja){
+    datos.push({ etiqueta:t("belt"), valor:faja });
+  }
+
+  const horaConsulta = new Intl.DateTimeFormat(idiomaActual === "en" ? "en-US" : "es-PE", {
+    hour:"2-digit",
+    minute:"2-digit"
+  }).format(new Date());
+
+  document.getElementById("resultadoVuelo").innerHTML = `
+    <article class="tarjeta-vuelo">
+      <header class="cabecera-vuelo">
+        <div class="identidad-vuelo">
+          <div class="aerolinea">${escapeHtml(aerolinea)}</div>
+          <div class="codigo-vuelo">✈ ${escapeHtml(codigo)}</div>
+        </div>
+        <div class="estado-pill ${claseEstado}">${escapeHtml(estado)}</div>
+      </header>
+
+      <div class="datos-vuelo">
+        ${datos.map((dato) => `
+          <div class="dato-vuelo">
+            <div class="dato-etiqueta">${escapeHtml(dato.etiqueta)}</div>
+            <div class="dato-valor">${escapeHtml(dato.valor)}</div>
+          </div>`).join("")}
+      </div>
+
+      <footer class="pie-vuelo">
+        ${escapeHtml(t("updated"))}: ${escapeHtml(horaConsulta)}<br>
+        ${escapeHtml(t("disclaimer"))}
+      </footer>
+    </article>`;
 }
+
+function primerValor(...valores){
+  return valores.find((valor) => valor !== null && valor !== undefined && String(valor).trim() !== "") || "";
+}
+
+function formatearHora(valor){
+  if(!valor) return t("unavailable");
+  const texto = String(valor).trim();
+  const coincidencia = texto.match(/(?:\s|^)(\d{2}:\d{2})(?::\d{2})?(?:$|\s)/);
+  if(coincidencia) return coincidencia[1];
+
+  const horaSimple = texto.match(/^(\d{2}:\d{2})/);
+  return horaSimple ? horaSimple[1] : t("unavailable");
+}
+
+function normalizarTexto(valor){
+  return String(valor || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase()
+    .trim();
+}
+
+function traducirEstado(estado){
+  const e = normalizarTexto(estado);
+  if(!e) return t("unavailable");
+
+  const categorias = [
+    { palabras:["CANCEL"], es:"Cancelado", en:"Cancelled" },
+    { palabras:["DEMOR", "RETRAS", "DELAY"], es:"Demorado", en:"Delayed" },
+    { palabras:["ULTIMO LLAM", "LAST CALL"], es:"Último llamado", en:"Last call" },
+    { palabras:["FIN EMBARQ", "EMBARQUE FINALIZADO", "BOARDING CLOSED"], es:"Embarque finalizado", en:"Boarding closed" },
+    { palabras:["EMBARC", "BOARDING"], es:"Embarcando", en:"Boarding" },
+    { palabras:["ATERRIZ", "LANDED"], es:"Aterrizado", en:"Landed" },
+    { palabras:["ARRIB", "LLEGO", "ARRIVED"], es:"Arribó", en:"Arrived" },
+    { palabras:["DESPEG", "DEPARTED"], es:"Despegó", en:"Departed" },
+    { palabras:["A TIEMPO", "ON TIME"], es:"A tiempo", en:"On time" },
+    { palabras:["PROGRAM", "SCHEDULED"], es:"Programado", en:"Scheduled" }
+  ];
+
+  const categoria = categorias.find((item) => item.palabras.some((palabra) => e.includes(palabra)));
+  if(categoria) return categoria[idiomaActual];
+
+  return String(estado).trim();
+}
+
+function obtenerClaseEstado(estado){
+  const e = normalizarTexto(estado);
+  if(e.includes("CANCEL")) return "estado-rojo";
+  if(["DEMOR", "RETRAS", "DELAY"].some((p) => e.includes(p))) return "estado-naranja";
+  if(["EMBARC", "BOARDING", "ULTIMO LLAM", "LAST CALL", "FIN EMBARQ"].some((p) => e.includes(p))) return "estado-amarillo";
+  if(["A TIEMPO", "ON TIME", "ATERRIZ", "LANDED", "ARRIB", "LLEGO", "ARRIVED", "DESPEG", "DEPARTED"].some((p) => e.includes(p))) return "estado-verde";
+  return "estado-neutro";
+}
+
+function escapeHtml(valor){
+  return String(valor ?? "").replace(/[&<>'"]/g, (caracter) => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    "'":"&#39;",
+    '"':"&quot;"
+  })[caracter]);
+}
+
+function activarTeclado(){
+  document.querySelectorAll("[role='button']").forEach((elemento) => {
+    elemento.addEventListener("keydown", (evento) => {
+      if(evento.key === "Enter" || evento.key === " "){
+        evento.preventDefault();
+        elemento.click();
+      }
+    });
+  });
+}
+
+const inputVuelo = document.getElementById("numeroVuelo");
+inputVuelo.addEventListener("input", () => {
+  const limpio = normalizarNumeroVuelo(inputVuelo.value);
+  if(inputVuelo.value !== limpio) inputVuelo.value = limpio;
+});
+
+inputVuelo.addEventListener("keydown", (evento) => {
+  if(evento.key === "Enter"){
+    evento.preventDefault();
+    buscarVuelo();
+  }
+});
+
+activarTeclado();
+actualizarTextos();
 </script>
-
 </body>
 </html>
