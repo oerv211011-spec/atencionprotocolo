@@ -514,13 +514,13 @@ function seleccionarIdioma(idioma){
   const btnAsistencia = document.getElementById("btnAsistencia");
   const btnVuelo = document.getElementById("btnVuelo");
 
-  const volverMenu = document.getElementById("volverIdiomaMenu");
+  const lblVolverMenu = document.getElementById("volverIdiomaMenu");
   const volverAsistencia = document.getElementById("volverIdiomaAsistencia");
 
 
 if(idioma === "en"){
 
-    volverMenu.innerHTML = "🌐 Change Language";
+    lblVolverMenu.innerHTML = "🌐 Change Language";
     volverAsistencia.innerHTML = "🌐 Change Language";
 
     textoBoton.innerHTML = "REQUEST<br>ASSISTANCE";
@@ -533,7 +533,7 @@ if(idioma === "en"){
 
 }else{
 
-    volverMenu.innerHTML = "🌐 Cambiar idioma";
+    lblVolverMenu.innerHTML = "🌐 Cambiar idioma";
     volverAsistencia.innerHTML = "🌐 Cambiar idioma";
 
     textoBoton.innerHTML = "SOLICITAR<br>ASISTENCIA";
