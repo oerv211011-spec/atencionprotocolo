@@ -435,9 +435,71 @@ Seleccione una opción
 </div>
 
 </div>
+
+  <!-- PANTALLA CONSULTA VUELO -->
+
+<div id="pantallaVuelo"
+style="
+display:none;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+">
+
+<div class="texto-bienvenida">
+Consultar vuelo
+</div>
+
+<input
+id="numeroVuelo"
+placeholder="Ejemplo: LA2075"
+style="
+width:300px;
+height:55px;
+border-radius:15px;
+border:none;
+font-size:22px;
+text-align:center;
+font-family:Montserrat;
+margin:20px;
+">
+
+<button
+class="idioma-btn"
+onclick="buscarVuelo()">
+
+🔎 BUSCAR VUELO
+
+</button>
+
+<div id="resultadoVuelo"
+style="
+margin-top:25px;
+font-size:18px;
+line-height:1.8;
+">
+</div>
+
+<div
+id="volverVuelo"
+onclick="volverMenu()"
+style="
+margin-top:50px;
+font-size:16px;
+cursor:pointer;
+">
+
+⬅️ Volver
+
+</div>
+
+</div>
+
 <img src="assets/logo-alturas-transparente.png" class="logo-vip">
 
 <script>
+  
 
 const mesa = 7;
 let enviando = false;
@@ -598,7 +660,9 @@ function mostrarAsistencia(){
 
 function mostrarConsultaVuelo(){
 
-  alert("Próximamente consulta de vuelos ✈️");
+document.getElementById("pantallaMenu").style.display="none";
+
+document.getElementById("pantallaVuelo").style.display="flex";
 
 }
 </script>
