@@ -327,6 +327,53 @@ button:focus-visible, input:focus-visible{
   font-size:19px;
 }
 
+.selector-fecha{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  width:min(500px,100%);
+  margin:4px auto 20px;
+  padding:6px;
+  border:1px solid rgba(241,213,138,.30);
+  border-radius:16px;
+  background:rgba(0,0,0,.28);
+}
+
+.fecha-btn{
+  min-height:48px;
+  padding:8px 6px;
+  border:1px solid transparent;
+  border-radius:11px;
+  background:transparent;
+  color:rgba(255,255,255,.74);
+  font-size:13px;
+  font-weight:800;
+  line-height:1.15;
+  cursor:pointer;
+  transition:background .2s ease, color .2s ease, border-color .2s ease, transform .15s ease;
+}
+
+.fecha-btn:hover{
+  color:#fff4d6;
+  transform:translateY(-1px);
+}
+
+.fecha-btn.activo{
+  color:#17120b;
+  border-color:rgba(255,255,255,.25);
+  background:linear-gradient(145deg,#f7f1e3,#c99c4f);
+  box-shadow:0 6px 16px rgba(0,0,0,.28);
+}
+
+.fecha-destacada{
+  margin-top:5px;
+  color:#f1d58a;
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+}
+
 #resultadoVuelo{
   width:100%;
   margin-top:20px;
@@ -529,6 +576,13 @@ button:focus-visible, input:focus-visible{
     <h1 class="titulo-seccion" id="tituloVuelo">Consultar vuelo</h1>
     <p class="subtitulo-seccion" id="subtituloVuelo">Ingrese el número de vuelo para consultar la información publicada por Lima Airport.</p>
 
+
+    <div class="selector-fecha" role="group" aria-label="Fecha del vuelo">
+      <button type="button" class="fecha-btn activo" id="btnFechaNext" onclick="seleccionarModoFecha('next')">PRÓXIMO VUELO</button>
+      <button type="button" class="fecha-btn" id="btnFechaToday" onclick="seleccionarModoFecha('today')">HOY</button>
+      <button type="button" class="fecha-btn" id="btnFechaTomorrow" onclick="seleccionarModoFecha('tomorrow')">MAÑANA</button>
+    </div>
+
     <input
       id="numeroVuelo"
       class="input-vuelo"
@@ -560,6 +614,7 @@ const URL_ASISTENCIA = "https://script.google.com/macros/s/AKfycbxU5N9gvYgnr6ziP
 const API_VUELOS = "https://script.google.com/macros/s/AKfycbw90PrrkMDqzFomJzCn1iU3fPRMNO8EZEUOmGO0tda5GWbK9DgivIVnpmrv0NukeoDB0Q/exec";
 
 let idiomaActual = "es";
+let modoFecha = "next";
 let enviando = false;
 let buscandoVuelo = false;
 let controladorBusqueda = null;
@@ -576,14 +631,20 @@ const textos = {
     thanks: "✨ Gracias.<br>Nuestro personal acudirá en breve.",
     connectionError: "❌ Error de conexión",
     flightTitle: "Consultar vuelo",
-    flightSubtitle: "Ingrese el número de vuelo para consultar la información publicada por Lima Airport.",
+    flightSubtitle: "Ingrese el número de vuelo y seleccione la fecha. La opción recomendada es Próximo vuelo.",
+    nextFlight: "PRÓXIMO VUELO",
+    today: "HOY",
+    tomorrow: "MAÑANA",
+    date: "Fecha",
+    todayLong: "Hoy",
+    tomorrowLong: "Mañana",
     placeholder: "Ejemplo: LA2075",
     search: "🔎 BUSCAR VUELO",
     searching: "Consultando vuelo",
     invalidTitle: "Ingrese un vuelo válido",
     invalidText: "Escriba el código de la aerolínea y el número de vuelo. Por ejemplo: LA2075.",
     notFoundTitle: "No se encontró el vuelo",
-    notFoundText: "Verifique el número e intente nuevamente. La consulta muestra los vuelos publicados para hoy.",
+    notFoundText: "Verifique el número y la fecha seleccionada e intente nuevamente.",
     apiErrorTitle: "No se pudo consultar el vuelo",
     apiErrorText: "Revise la conexión a Internet e intente nuevamente.",
     flight: "Vuelo",
@@ -615,14 +676,20 @@ const textos = {
     thanks: "✨ Thank you.<br>Our staff will assist you shortly.",
     connectionError: "❌ Connection error",
     flightTitle: "Flight information",
-    flightSubtitle: "Enter the flight number to check the information published by Lima Airport.",
+    flightSubtitle: "Enter the flight number and select the date. The recommended option is Next flight.",
+    nextFlight: "NEXT FLIGHT",
+    today: "TODAY",
+    tomorrow: "TOMORROW",
+    date: "Date",
+    todayLong: "Today",
+    tomorrowLong: "Tomorrow",
     placeholder: "Example: LA2075",
     search: "🔎 SEARCH FLIGHT",
     searching: "Searching flight",
     invalidTitle: "Enter a valid flight",
     invalidText: "Enter the airline code and flight number. For example: LA2075.",
     notFoundTitle: "Flight not found",
-    notFoundText: "Check the number and try again. The search shows flights published for today.",
+    notFoundText: "Check the flight number and selected date, then try again.",
     apiErrorTitle: "Unable to check the flight",
     apiErrorText: "Check the Internet connection and try again.",
     flight: "Flight",
@@ -684,6 +751,69 @@ function actualizarTextos(){
   document.getElementById("numeroVuelo").placeholder = t("placeholder");
   document.getElementById("numeroVuelo").setAttribute("aria-label", t("flight"));
   document.getElementById("btnBuscarVuelo").textContent = t("search");
+  actualizarSelectorFecha();
+}
+
+
+function seleccionarModoFecha(modo, limpiarResultado = true){
+  modoFecha = ["next", "today", "tomorrow"].includes(modo) ? modo : "next";
+  actualizarSelectorFecha();
+
+  if(limpiarResultado){
+    cancelarBusqueda();
+    document.getElementById("resultadoVuelo").innerHTML = "";
+  }
+}
+
+function actualizarSelectorFecha(){
+  const configuracion = {
+    next: {
+      id: "btnFechaNext",
+      texto: t("nextFlight")
+    },
+    today: {
+      id: "btnFechaToday",
+      texto: t("today")
+    },
+    tomorrow: {
+      id: "btnFechaTomorrow",
+      texto: t("tomorrow")
+    }
+  };
+
+  Object.entries(configuracion).forEach(([modo, datos]) => {
+    const boton = document.getElementById(datos.id);
+    if(!boton) return;
+    boton.textContent = datos.texto;
+    boton.classList.toggle("activo", modoFecha === modo);
+    boton.setAttribute("aria-pressed", modoFecha === modo ? "true" : "false");
+  });
+
+  const grupo = document.querySelector(".selector-fecha");
+  if(grupo){
+    grupo.setAttribute(
+      "aria-label",
+      idiomaActual === "en" ? "Flight date" : "Fecha del vuelo"
+    );
+  }
+}
+
+function mensajeNoEncontrado(){
+  if(modoFecha === "today"){
+    return idiomaActual === "en"
+      ? "No matching flight was found for today."
+      : "No se encontró ese vuelo para hoy.";
+  }
+
+  if(modoFecha === "tomorrow"){
+    return idiomaActual === "en"
+      ? "No matching flight was found for tomorrow."
+      : "No se encontró ese vuelo para mañana.";
+  }
+
+  return idiomaActual === "en"
+    ? "No upcoming matching flight was found. You can also select Today or Tomorrow."
+    : "No se encontró un próximo vuelo vigente. También puede seleccionar Hoy o Mañana.";
 }
 
 function volverIdioma(){
@@ -767,6 +897,8 @@ function limpiarConsultaVuelo(){
   document.getElementById("numeroVuelo").value = "";
   document.getElementById("resultadoVuelo").innerHTML = "";
   document.getElementById("btnBuscarVuelo").disabled = false;
+  modoFecha = "next";
+  actualizarSelectorFecha();
   buscandoVuelo = false;
 }
 
@@ -805,7 +937,7 @@ async function buscarVuelo(){
   const temporizador = window.setTimeout(() => controladorBusqueda.abort(), 30000);
 
   try{
-    const url = `${API_VUELOS}?search=${encodeURIComponent(numero)}&_=${Date.now()}`;
+    const url = `${API_VUELOS}?search=${encodeURIComponent(numero)}&day=${encodeURIComponent(modoFecha)}&_=${Date.now()}`;
     const respuesta = await fetch(url, {
       method:"GET",
       cache:"no-store",
@@ -825,7 +957,7 @@ async function buscarVuelo(){
     }
 
     if(datos.found !== true || !datos.flight){
-      mostrarMensajeVuelo(t("notFoundTitle"), t("notFoundText"));
+      mostrarMensajeVuelo(t("notFoundTitle"), mensajeNoEncontrado());
       return;
     }
 
@@ -834,7 +966,10 @@ async function buscarVuelo(){
       ...datos.flight,
       _tipo: meta.tipo || (meta.adi === "arrivals" ? "arrival" : "departure"),
       _trafico: meta.scope || (datos.flight.tip_trafico === "I" ? "international" : "domestic"),
-      _diaConsulta: meta.day || "today"
+      _diaConsulta: meta.day || "today",
+      _requestedDay: meta.requestedDay || modoFecha,
+      _selectedDate: meta.selectedDate || datos.flight.fch_prog || "",
+      _dayRelation: meta.dayRelation || ""
     };
 
     mostrarTarjetaVuelo(vuelo);
@@ -945,6 +1080,45 @@ function mostrarMensajeVuelo(titulo, mensaje){
     </div>`;
 }
 
+
+function obtenerFechaISO(valor){
+  const coincidencia = String(valor || "").match(/^(\d{4}-\d{2}-\d{2})/);
+  return coincidencia ? coincidencia[1] : "";
+}
+
+function formatearFechaVuelo(vuelo){
+  const fechaISO =
+    obtenerFechaISO(vuelo._selectedDate) ||
+    obtenerFechaISO(vuelo.fch_hra_prog) ||
+    obtenerFechaISO(vuelo.fch_prog);
+
+  if(!fechaISO){
+    return t("unavailable");
+  }
+
+  const [anio, mes, dia] = fechaISO.split("-").map(Number);
+  const fecha = new Date(anio, mes - 1, dia, 12, 0, 0);
+
+  const fechaFormateada = new Intl.DateTimeFormat(
+    idiomaActual === "en" ? "en-US" : "es-PE",
+    {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    }
+  ).format(fecha);
+
+  if(vuelo._dayRelation === "today"){
+    return `${t("todayLong")} · ${fechaFormateada}`;
+  }
+
+  if(vuelo._dayRelation === "tomorrow"){
+    return `${t("tomorrowLong")} · ${fechaFormateada}`;
+  }
+
+  return fechaFormateada;
+}
+
 function mostrarTarjetaVuelo(vuelo){
   const codigo = vuelo.cod_vuelo || vuelo.cod_vuelo_op || t("unavailable");
   const aerolinea = vuelo.abr_aerolinea || vuelo.cod_aerolinea || t("unavailable");
@@ -954,6 +1128,7 @@ function mostrarTarjetaVuelo(vuelo){
 
   const ciudad = vuelo.dsc_prc_dest || vuelo.cod_prc_dest || t("unavailable");
   const etiquetaCiudad = vuelo._tipo === "arrival" ? t("origin") : t("destination");
+  const fechaVuelo = formatearFechaVuelo(vuelo);
 
   const horaProgramada = formatearHora(vuelo.hra_prog || vuelo.fch_hra_prog);
   const horaActualizada = formatearHora(vuelo.fch_hra_real || vuelo.fch_hra_ult || vuelo.fch_hra_est);
@@ -965,6 +1140,7 @@ function mostrarTarjetaVuelo(vuelo){
   const operacion = `${vuelo._tipo === "arrival" ? t("arrival") : t("departure")} · ${vuelo._trafico === "international" ? t("international") : t("domestic")}`;
 
   const datos = [
+    { etiqueta:t("date"), valor:fechaVuelo },
     { etiqueta:etiquetaCiudad, valor:ciudad },
     { etiqueta:t("time"), valor:horaProgramada },
     { etiqueta:t("gate"), valor:puerta || t("unavailable") },
@@ -991,6 +1167,7 @@ function mostrarTarjetaVuelo(vuelo){
         <div class="identidad-vuelo">
           <div class="aerolinea">${escapeHtml(aerolinea)}</div>
           <div class="codigo-vuelo">✈ ${escapeHtml(codigo)}</div>
+          <div class="fecha-destacada">${escapeHtml(fechaVuelo)}</div>
         </div>
         <div class="estado-pill ${claseEstado}">${escapeHtml(estado)}</div>
       </header>
