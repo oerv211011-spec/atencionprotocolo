@@ -1282,6 +1282,97 @@ input:focus-visible,
   }
 }
 
+
+/* =========================
+   REGRESO AUTOMÁTICO
+========================= */
+.inactividad-overlay{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(5,4,3,.78);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .25s ease, visibility .25s ease;
+}
+
+.inactividad-overlay.visible{
+  opacity:1;
+  visibility:visible;
+}
+
+.inactividad-card{
+  width:min(470px,92vw);
+  padding:34px 30px 30px;
+  border:1px solid rgba(229,195,122,.52);
+  border-radius:28px;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(229,195,122,.15),transparent 42%),
+    linear-gradient(150deg,rgba(31,24,16,.98),rgba(8,7,5,.98));
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.62),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  text-align:center;
+}
+
+.inactividad-linea{
+  width:52px;
+  height:1px;
+  margin:0 auto 20px;
+  background:linear-gradient(90deg,transparent,var(--oro-200),transparent);
+}
+
+.inactividad-titulo{
+  margin:0 0 12px;
+  color:var(--oro-100);
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(30px,5vw,39px);
+  font-weight:700;
+  line-height:1.05;
+}
+
+.inactividad-texto{
+  margin:0 auto 24px;
+  max-width:360px;
+  color:rgba(255,255,255,.72);
+  font-size:14px;
+  line-height:1.65;
+}
+
+.inactividad-contador{
+  color:var(--oro-200);
+  font-size:22px;
+  font-weight:800;
+}
+
+.inactividad-btn{
+  width:min(300px,100%);
+  min-height:58px;
+  padding:13px 20px;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:16px;
+  background:linear-gradient(145deg,#f8edd2,#c8994b 58%,#81581f);
+  color:#17120b;
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  cursor:pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.48),
+    0 12px 26px rgba(0,0,0,.35);
+}
+
+.inactividad-btn:active{
+  transform:scale(.98);
+}
+
 </style>
 </head>
 
@@ -1474,6 +1565,23 @@ input:focus-visible,
   </div>
 </section>
 
+
+<!-- AVISO DE INACTIVIDAD -->
+<div id="avisoInactividad" class="inactividad-overlay" aria-hidden="true">
+  <div class="inactividad-card" role="dialog" aria-modal="true" aria-labelledby="tituloInactividad">
+    <div class="inactividad-linea"></div>
+    <h2 id="tituloInactividad" class="inactividad-titulo">¿Desea continuar?</h2>
+    <p class="inactividad-texto">
+      <span id="textoInactividad">Por privacidad, esta pantalla volverá al inicio en</span>
+      <span id="contadorInactividad" class="inactividad-contador">20</span>
+      <span id="segundosInactividad">segundos.</span>
+    </p>
+    <button type="button" id="btnContinuarSesion" class="inactividad-btn" onclick="continuarSesion()">
+      Continuar
+    </button>
+  </div>
+</div>
+
 <img src="assets/logo-alturas-transparente.png" class="logo-vip" alt="">
 
 <script>
@@ -1488,6 +1596,14 @@ let modoFecha = "next";
 let enviando = false;
 let buscandoVuelo = false;
 let controladorBusqueda = null;
+
+let temporizadorAvisoInactividad = null;
+let temporizadorRegresoInactividad = null;
+let intervaloContadorInactividad = null;
+
+const TIEMPO_INACTIVIDAD_MS = 3 * 60 * 1000;
+const TIEMPO_AVISO_INACTIVIDAD_MS = 20 * 1000;
+
 let paginaCartaActual = 1;
 const TOTAL_PAGINAS_CARTA = 8;
 
@@ -1550,7 +1666,11 @@ const textos = {
     international: "Internacional",
     unavailable: "Por confirmar",
     updated: "Consulta realizada",
-    disclaimer: "Información referencial sujeta a cambios operativos. Confirme también en las pantallas del aeropuerto o con la aerolínea."
+    disclaimer: "Información referencial sujeta a cambios operativos. Confirme también en las pantallas del aeropuerto o con la aerolínea.",
+    inactivityTitle: "¿Desea continuar?",
+    inactivityText: "Por privacidad, esta pantalla volverá al inicio en",
+    inactivitySeconds: "segundos.",
+    inactivityContinue: "Continuar"
   },
   en: {
     menuTitle: "How may we assist you?",
@@ -1610,7 +1730,11 @@ const textos = {
     international: "International",
     unavailable: "To be confirmed",
     updated: "Checked at",
-    disclaimer: "Information is subject to operational changes. Please also confirm on airport screens or with the airline."
+    disclaimer: "Information is subject to operational changes. Please also confirm on airport screens or with the airline.",
+    inactivityTitle: "Would you like to continue?",
+    inactivityText: "For privacy, this screen will return to the welcome page in",
+    inactivitySeconds: "seconds.",
+    inactivityContinue: "Continue"
   }
 };
 
@@ -1629,6 +1753,112 @@ function mostrarPantalla(id){
   const activa = document.getElementById(id);
   activa.scrollTop = 0;
   document.body.classList.toggle("carta-abierta", id === "pantallaCarta");
+
+  if(id === "pantallaIdioma"){
+    detenerTemporizadorInactividad();
+  }else{
+    reiniciarTemporizadorInactividad();
+  }
+}
+
+
+function pantallaActualId(){
+  const activa = document.querySelector(".pantalla.activa");
+  return activa ? activa.id : "";
+}
+
+function detenerTemporizadorInactividad(){
+  window.clearTimeout(temporizadorAvisoInactividad);
+  window.clearTimeout(temporizadorRegresoInactividad);
+  window.clearInterval(intervaloContadorInactividad);
+
+  temporizadorAvisoInactividad = null;
+  temporizadorRegresoInactividad = null;
+  intervaloContadorInactividad = null;
+
+  ocultarAvisoInactividad();
+}
+
+function reiniciarTemporizadorInactividad(){
+  if(pantallaActualId() === "pantallaIdioma"){
+    detenerTemporizadorInactividad();
+    return;
+  }
+
+  window.clearTimeout(temporizadorAvisoInactividad);
+  window.clearTimeout(temporizadorRegresoInactividad);
+  window.clearInterval(intervaloContadorInactividad);
+  ocultarAvisoInactividad();
+
+  const esperaAntesDelAviso =
+    TIEMPO_INACTIVIDAD_MS - TIEMPO_AVISO_INACTIVIDAD_MS;
+
+  temporizadorAvisoInactividad = window.setTimeout(
+    mostrarAvisoInactividad,
+    esperaAntesDelAviso
+  );
+}
+
+function mostrarAvisoInactividad(){
+  if(pantallaActualId() === "pantallaIdioma") return;
+
+  const overlay = document.getElementById("avisoInactividad");
+  const contador = document.getElementById("contadorInactividad");
+  let segundos = Math.ceil(TIEMPO_AVISO_INACTIVIDAD_MS / 1000);
+
+  contador.textContent = String(segundos);
+  overlay.classList.add("visible");
+  overlay.setAttribute("aria-hidden", "false");
+
+  window.clearInterval(intervaloContadorInactividad);
+  intervaloContadorInactividad = window.setInterval(() => {
+    segundos -= 1;
+    contador.textContent = String(Math.max(segundos, 0));
+  }, 1000);
+
+  temporizadorRegresoInactividad = window.setTimeout(
+    regresarInicioPorInactividad,
+    TIEMPO_AVISO_INACTIVIDAD_MS
+  );
+}
+
+function ocultarAvisoInactividad(){
+  const overlay = document.getElementById("avisoInactividad");
+  if(!overlay) return;
+  overlay.classList.remove("visible");
+  overlay.setAttribute("aria-hidden", "true");
+}
+
+function continuarSesion(){
+  reiniciarTemporizadorInactividad();
+}
+
+function regresarInicioPorInactividad(){
+  cancelarBusqueda();
+
+  const audio = document.getElementById("sonidoVip");
+  if(audio){
+    audio.pause();
+    audio.currentTime = 0;
+  }
+
+  const mensaje = document.getElementById("mensaje");
+  if(mensaje){
+    mensaje.classList.remove("dots");
+    mensaje.innerHTML = "";
+  }
+
+  enviando = false;
+  paginaCartaActual = 1;
+  limpiarConsultaVuelo();
+  ocultarAvisoInactividad();
+  mostrarPantalla("pantallaIdioma");
+}
+
+function registrarActividadUsuario(){
+  if(pantallaActualId() !== "pantallaIdioma"){
+    reiniciarTemporizadorInactividad();
+  }
 }
 
 function seleccionarIdioma(idioma){
@@ -1676,6 +1906,12 @@ function actualizarTextos(){
   document.getElementById("cartaSiguiente").textContent = t("nextPage");
   document.getElementById("cartaLoading").textContent = t("loadingMenu");
   document.getElementById("cartaSwipeHint").textContent = t("swipeMenu");
+
+  document.getElementById("tituloInactividad").textContent = t("inactivityTitle");
+  document.getElementById("textoInactividad").textContent = t("inactivityText");
+  document.getElementById("segundosInactividad").textContent = t("inactivitySeconds");
+  document.getElementById("btnContinuarSesion").textContent = t("inactivityContinue");
+
   actualizarSelectorFecha();
   actualizarCarta(false);
 }
@@ -2295,8 +2531,24 @@ document.addEventListener("keydown", (evento) => {
   if(evento.key === "Escape") volverMenu();
 });
 
+
+["pointerdown", "touchstart", "keydown"].forEach((eventoNombre) => {
+  document.addEventListener(
+    eventoNombre,
+    registrarActividadUsuario,
+    { passive:true }
+  );
+});
+
+document.addEventListener(
+  "scroll",
+  registrarActividadUsuario,
+  { passive:true, capture:true }
+);
+
 activarTeclado();
 actualizarTextos();
+
 </script>
 </body>
 </html>
