@@ -1373,6 +1373,225 @@ input:focus-visible,
   transform:scale(.98);
 }
 
+
+/* =========================
+   MAPA INTERACTIVO DEL AEROPUERTO
+========================= */
+#pantallaMapa{
+  max-width:none;
+  padding:18px 18px 22px;
+}
+
+.mapa-shell{
+  width:min(1180px,97vw);
+  height:min(940px,94dvh);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  border:1px solid rgba(229,195,122,.44);
+  border-radius:27px;
+  background:linear-gradient(150deg,rgba(25,19,12,.97),rgba(6,5,4,.98));
+  box-shadow:
+    0 30px 85px rgba(0,0,0,.62),
+    inset 0 1px 0 rgba(255,255,255,.07);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+
+.mapa-toolbar{
+  flex:0 0 auto;
+  display:grid;
+  grid-template-columns:minmax(155px,1fr) auto minmax(155px,1fr);
+  align-items:center;
+  gap:14px;
+  min-height:72px;
+  padding:13px 18px;
+  border-bottom:1px solid rgba(229,195,122,.18);
+  background:
+    radial-gradient(circle at 50% 0%,rgba(229,195,122,.12),transparent 58%),
+    rgba(8,7,5,.76);
+}
+
+.mapa-toolbar-title{
+  margin:0;
+  color:var(--oro-100);
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(25px,3.4vw,34px);
+  font-weight:700;
+  letter-spacing:.35px;
+  line-height:1;
+  text-align:center;
+}
+
+.mapa-toolbar-action{
+  justify-self:end;
+  min-height:44px;
+  padding:10px 15px;
+  border:1px solid rgba(229,195,122,.38);
+  border-radius:13px;
+  background:rgba(229,195,122,.08);
+  color:var(--oro-100);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.65px;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:background .2s ease, transform .2s ease;
+}
+
+.mapa-toolbar-action:hover{
+  background:rgba(229,195,122,.16);
+  transform:translateY(-1px);
+}
+
+.mapa-back{
+  justify-self:start;
+  min-height:44px;
+  padding:10px 15px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:13px;
+  background:rgba(255,255,255,.045);
+  color:rgba(255,255,255,.84);
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.mapa-stage{
+  position:relative;
+  flex:1 1 auto;
+  min-height:0;
+  background:#f2f2f2;
+}
+
+.mapa-iframe{
+  display:block;
+  width:100%;
+  height:100%;
+  border:0;
+  background:#f2f2f2;
+}
+
+.mapa-loading{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding:30px;
+  background:
+    radial-gradient(circle at 50% 38%,rgba(229,195,122,.12),transparent 35%),
+    linear-gradient(150deg,#17120c,#090806);
+  color:rgba(255,255,255,.76);
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.4px;
+  text-align:center;
+  transition:opacity .25s ease, visibility .25s ease;
+}
+
+.mapa-loading::before{
+  content:"";
+  width:42px;
+  height:42px;
+  border:2px solid rgba(229,195,122,.22);
+  border-top-color:var(--oro-200);
+  border-radius:50%;
+  animation:mapaGiro .9s linear infinite;
+}
+
+.mapa-loading.oculto{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+
+@keyframes mapaGiro{
+  to{ transform:rotate(360deg); }
+}
+
+.mapa-fallback{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  min-height:60px;
+  padding:10px 18px;
+  border-top:1px solid rgba(229,195,122,.16);
+  background:rgba(6,5,4,.94);
+  color:rgba(255,255,255,.58);
+  font-size:11px;
+  line-height:1.4;
+  text-align:center;
+}
+
+.mapa-fallback-btn{
+  flex:0 0 auto;
+  min-height:39px;
+  padding:9px 14px;
+  border:1px solid rgba(229,195,122,.36);
+  border-radius:11px;
+  background:linear-gradient(145deg,rgba(247,237,210,.16),rgba(200,153,75,.10));
+  color:var(--oro-100);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.7px;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+
+.mapa-abierto .logo-vip{
+  opacity:0;
+}
+
+@media (max-width:720px){
+  .mapa-toolbar{
+    grid-template-columns:auto 1fr auto;
+    gap:8px;
+    min-height:64px;
+    padding:10px;
+  }
+
+  .mapa-toolbar-title{
+    font-size:23px;
+  }
+
+  .mapa-back,
+  .mapa-toolbar-action{
+    padding:9px 10px;
+    font-size:10px;
+  }
+
+  .mapa-fallback{
+    flex-direction:column;
+    gap:8px;
+    padding:9px 12px;
+  }
+}
+
+@media (max-height:720px){
+  #pantallaMapa{
+    padding:8px;
+  }
+
+  .mapa-shell{
+    height:97dvh;
+    border-radius:18px;
+  }
+
+  .mapa-toolbar{
+    min-height:55px;
+  }
+
+  .mapa-fallback{
+    min-height:48px;
+  }
+}
+
 </style>
 </head>
 
@@ -1464,6 +1683,23 @@ input:focus-visible,
         <span class="menu-card-copy">
           <span class="menu-card-kicker" id="cartaKicker">GASTRONOMÍA ALTURAS</span>
           <span class="menu-card-title" id="cartaTituloMenu">Nuestra carta</span>
+        </span>
+
+        <span class="menu-card-arrow" aria-hidden="true">›</span>
+      </button>
+
+      <button type="button" class="menu-card" onclick="mostrarMapa()" id="btnMapa">
+        <span class="menu-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m3.5 6.5 5-2.5 7 2.5 5-2.5v13.5l-5 2.5-7-2.5-5 2.5V6.5Z"></path>
+            <path d="M8.5 4v13.5M15.5 6.5V20"></path>
+            <path d="M12 10.1a2 2 0 1 1 4 0c0 1.7-2 3.9-2 3.9s-2-2.2-2-3.9Z"></path>
+          </svg>
+        </span>
+
+        <span class="menu-card-copy">
+          <span class="menu-card-kicker" id="mapaKicker">ORIENTACIÓN EN EL TERMINAL</span>
+          <span class="menu-card-title" id="mapaTituloMenu">Mapa del aeropuerto</span>
         </span>
 
         <span class="menu-card-arrow" aria-hidden="true">›</span>
@@ -1566,6 +1802,41 @@ input:focus-visible,
 </section>
 
 
+<!-- PANTALLA MAPA DEL AEROPUERTO -->
+<section id="pantallaMapa" class="pantalla" aria-label="Mapa del aeropuerto">
+  <div class="mapa-shell">
+    <header class="mapa-toolbar">
+      <button type="button" class="mapa-back" id="volverMapa" onclick="volverMenu()">⬅️ Volver</button>
+      <h1 class="mapa-toolbar-title" id="tituloMapa">Mapa del aeropuerto</h1>
+      <button type="button" class="mapa-toolbar-action" id="abrirMapaSuperior" onclick="abrirMapaOficial()">
+        Abrir mapa ↗
+      </button>
+    </header>
+
+    <div class="mapa-stage">
+      <div id="mapaLoading" class="mapa-loading">Cargando mapa interactivo...</div>
+      <iframe
+        id="mapaIframe"
+        class="mapa-iframe"
+        src="about:blank"
+        title="Mapa interactivo del Aeropuerto Internacional Jorge Chávez"
+        loading="eager"
+        allow="geolocation"
+        referrerpolicy="strict-origin-when-cross-origin"
+        onload="mapaCargado()">
+      </iframe>
+    </div>
+
+    <footer class="mapa-fallback">
+      <span id="mapaFallbackTexto">Si el mapa no se visualiza correctamente, puede abrir la versión oficial.</span>
+      <button type="button" class="mapa-fallback-btn" id="abrirMapaInferior" onclick="abrirMapaOficial()">
+        Abrir mapa oficial
+      </button>
+    </footer>
+  </div>
+</section>
+
+
 <!-- AVISO DE INACTIVIDAD -->
 <div id="avisoInactividad" class="inactividad-overlay" aria-hidden="true">
   <div class="inactividad-card" role="dialog" aria-modal="true" aria-labelledby="tituloInactividad">
@@ -1590,6 +1861,8 @@ input:focus-visible,
 const mesa = 5;
 const URL_ASISTENCIA = "https://script.google.com/macros/s/AKfycbxU5N9gvYgnr6ziPolPuPircfFdsRzLgCfVqntC8WGwZ-wath6i5o1dUuAfPFcBVJh2/exec";
 const API_VUELOS = "https://script.google.com/macros/s/AKfycbw90PrrkMDqzFomJzCn1iU3fPRMNO8EZEUOmGO0tda5GWbK9DgivIVnpmrv0NukeoDB0Q/exec";
+const MAPA_LAP_ES = "https://map.lima-airport.com/?lang=es-PE";
+const MAPA_LAP_EN = "https://map.lima-airport.com/?lang=en-GB";
 
 let idiomaActual = "es";
 let modoFecha = "next";
@@ -1617,6 +1890,8 @@ const textos = {
     flightMenuTitle: "Consultar vuelo",
     menuKicker: "GASTRONOMÍA ALTURAS",
     menuMenuTitle: "Nuestra carta",
+    mapKicker: "ORIENTACIÓN EN EL TERMINAL",
+    mapMenuTitle: "Mapa del aeropuerto",
     assistanceEyebrow: "SERVICIO PERSONALIZADO",
     assistanceTitle: "¿Necesita asistencia?",
     flightEyebrow: "INFORMACIÓN DE VUELO",
@@ -1635,6 +1910,11 @@ const textos = {
     ofWord: "de",
     loadingMenu: "Cargando carta...",
     swipeMenu: "Deslice para cambiar de página",
+    mapTitle: "Mapa del aeropuerto",
+    mapOpen: "Abrir mapa ↗",
+    mapOpenOfficial: "Abrir mapa oficial",
+    mapLoading: "Cargando mapa interactivo...",
+    mapFallback: "Si el mapa no se visualiza correctamente, puede abrir la versión oficial.",
     nextFlight: "PRÓXIMO VUELO",
     today: "HOY",
     tomorrow: "MAÑANA",
@@ -1681,6 +1961,8 @@ const textos = {
     flightMenuTitle: "Flight information",
     menuKicker: "ALTURAS DINING",
     menuMenuTitle: "Our menu",
+    mapKicker: "AIRPORT WAYFINDING",
+    mapMenuTitle: "Airport map",
     assistanceEyebrow: "PERSONALIZED SERVICE",
     assistanceTitle: "Do you need assistance?",
     flightEyebrow: "FLIGHT INFORMATION",
@@ -1699,6 +1981,11 @@ const textos = {
     ofWord: "of",
     loadingMenu: "Loading menu...",
     swipeMenu: "Swipe to change page",
+    mapTitle: "Airport map",
+    mapOpen: "Open map ↗",
+    mapOpenOfficial: "Open official map",
+    mapLoading: "Loading interactive map...",
+    mapFallback: "If the map does not display correctly, open the official version.",
     nextFlight: "NEXT FLIGHT",
     today: "TODAY",
     tomorrow: "TOMORROW",
@@ -1738,7 +2025,7 @@ const textos = {
   }
 };
 
-const pantallas = ["pantallaIdioma", "pantallaMenu", "pantallaAsistencia", "pantallaVuelo", "pantallaCarta"];
+const pantallas = ["pantallaIdioma", "pantallaMenu", "pantallaAsistencia", "pantallaVuelo", "pantallaCarta", "pantallaMapa"];
 
 function t(clave){
   return textos[idiomaActual][clave] || clave;
@@ -1753,6 +2040,11 @@ function mostrarPantalla(id){
   const activa = document.getElementById(id);
   activa.scrollTop = 0;
   document.body.classList.toggle("carta-abierta", id === "pantallaCarta");
+  document.body.classList.toggle("mapa-abierto", id === "pantallaMapa");
+
+  if(id !== "pantallaMapa"){
+    descargarMapa();
+  }
 
   if(id === "pantallaIdioma"){
     detenerTemporizadorInactividad();
@@ -1850,6 +2142,7 @@ function regresarInicioPorInactividad(){
 
   enviando = false;
   paginaCartaActual = 1;
+  descargarMapa();
   limpiarConsultaVuelo();
   ocultarAvisoInactividad();
   mostrarPantalla("pantallaIdioma");
@@ -1878,6 +2171,8 @@ function actualizarTextos(){
   document.getElementById("vueloTituloMenu").textContent = t("flightMenuTitle");
   document.getElementById("cartaKicker").textContent = t("menuKicker");
   document.getElementById("cartaTituloMenu").textContent = t("menuMenuTitle");
+  document.getElementById("mapaKicker").textContent = t("mapKicker");
+  document.getElementById("mapaTituloMenu").textContent = t("mapMenuTitle");
 
   document.getElementById("asistenciaEyebrow").textContent = t("assistanceEyebrow");
   document.getElementById("tituloAsistencia").textContent = t("assistanceTitle");
@@ -1906,6 +2201,16 @@ function actualizarTextos(){
   document.getElementById("cartaSiguiente").textContent = t("nextPage");
   document.getElementById("cartaLoading").textContent = t("loadingMenu");
   document.getElementById("cartaSwipeHint").textContent = t("swipeMenu");
+  document.getElementById("tituloMapa").textContent = t("mapTitle");
+  document.getElementById("volverMapa").textContent = t("back");
+  document.getElementById("abrirMapaSuperior").textContent = t("mapOpen");
+  document.getElementById("abrirMapaInferior").textContent = t("mapOpenOfficial");
+  document.getElementById("mapaLoading").textContent = t("mapLoading");
+  document.getElementById("mapaFallbackTexto").textContent = t("mapFallback");
+  document.getElementById("mapaIframe").title =
+    idiomaActual === "en"
+      ? "Interactive map of Jorge Chávez International Airport"
+      : "Mapa interactivo del Aeropuerto Internacional Jorge Chávez";
 
   document.getElementById("tituloInactividad").textContent = t("inactivityTitle");
   document.getElementById("textoInactividad").textContent = t("inactivityText");
@@ -2005,6 +2310,60 @@ function mostrarConsultaVuelo(){
   window.setTimeout(() => document.getElementById("numeroVuelo").focus(), 250);
 }
 
+
+
+function urlMapaActual(){
+  return idiomaActual === "en" ? MAPA_LAP_EN : MAPA_LAP_ES;
+}
+
+function mostrarMapa(){
+  const cargando = document.getElementById("mapaLoading");
+  cargando.textContent = t("mapLoading");
+  cargando.classList.remove("oculto");
+
+  mostrarPantalla("pantallaMapa");
+
+  const iframe = document.getElementById("mapaIframe");
+  const url = urlMapaActual();
+
+  if(iframe.getAttribute("src") !== url){
+    iframe.setAttribute("src", url);
+  }
+}
+
+function mapaCargado(){
+  const iframe = document.getElementById("mapaIframe");
+  if(!iframe || iframe.getAttribute("src") === "about:blank") return;
+
+  window.setTimeout(() => {
+    document.getElementById("mapaLoading").classList.add("oculto");
+  }, 500);
+}
+
+function descargarMapa(){
+  const iframe = document.getElementById("mapaIframe");
+  const cargando = document.getElementById("mapaLoading");
+
+  if(iframe && iframe.getAttribute("src") !== "about:blank"){
+    iframe.setAttribute("src", "about:blank");
+  }
+
+  if(cargando){
+    cargando.classList.remove("oculto");
+  }
+}
+
+function abrirMapaOficial(){
+  const nuevaVentana = window.open(
+    urlMapaActual(),
+    "_blank",
+    "noopener,noreferrer"
+  );
+
+  if(!nuevaVentana){
+    window.location.href = urlMapaActual();
+  }
+}
 
 function mostrarCarta(){
   paginaCartaActual = 1;
