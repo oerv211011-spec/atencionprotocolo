@@ -2535,6 +2535,59 @@ function vueloValido(numero){
   return numero.length >= 3 && numero.length <= 9 && /[A-Z]/.test(numero) && /\d/.test(numero);
 }
 
+// Genera una segunda variante únicamente cuando el número del vuelo
+// tiene uno o dos dígitos. Ejemplo: AV48 -> AV048.
+// Primero siempre se consulta exactamente lo que escribió el pasajero.
+function generarVariantesNumeroVuelo(numero){
+  const limpio = normalizarNumeroVuelo(numero);
+  const variantes = [limpio];
+
+  // Código IATA de dos caracteres, incluidas aerolíneas con números.
+  let coincidencia = limpio.match(/^([A-Z0-9]{2})(\d{1,4})$/);
+
+  // También admite un código de tres letras cuando corresponda.
+  if(!coincidencia){
+    coincidencia = limpio.match(/^([A-Z]{3})(\d{1,4})$/);
+  }
+
+  if(!coincidencia) return variantes;
+
+  const codigoAerolinea = coincidencia[1];
+  const numeroVuelo = coincidencia[2];
+
+  if(numeroVuelo.length < 3){
+    variantes.push(`${codigoAerolinea}${numeroVuelo.padStart(3, "0")}`);
+  }
+
+  return [...new Set(variantes)];
+}
+
+async function consultarVueloPorNumero(numeroConsulta, signal){
+  const url = `${API_VUELOS}?search=${encodeURIComponent(numeroConsulta)}&day=${encodeURIComponent(modoFecha)}&_=${Date.now()}`;
+
+  const respuesta = await fetch(url, {
+    method:"GET",
+    cache:"no-store",
+    signal,
+    redirect:"follow"
+  });
+
+  if(!respuesta.ok){
+    throw new Error(`Servicio de vuelos respondió ${respuesta.status}`);
+  }
+
+  const datos = await respuesta.json();
+
+  if(!datos || datos.ok !== true){
+    const detalle = datos && datos.error
+      ? datos.error
+      : "Respuesta inválida del servicio de vuelos";
+    throw new Error(detalle);
+  }
+
+  return datos;
+}
+
 function limpiarConsultaVuelo(){
   document.getElementById("numeroVuelo").value = "";
   document.getElementById("resultadoVuelo").innerHTML = "";
@@ -2558,73 +2611,93 @@ async function buscarVuelo(){
   if(buscandoVuelo) return;
 
   const input = document.getElementById("numeroVuelo");
-  const numero = normalizarNumeroVuelo(input.value);
-  input.value = numero;
+  const numeroEscrito = normalizarNumeroVuelo(input.value);
+  const variantesNumero = generarVariantesNumeroVuelo(numeroEscrito);
+  input.value = numeroEscrito;
 
-  if(!vueloValido(numero)){
-    registrarInteraccion("BUSCAR_VUELO_INVALIDO", numero || "Vacío");
+  if(!vueloValido(numeroEscrito)){
+    registrarInteraccion("BUSCAR_VUELO_INVALIDO", numeroEscrito || "Vacío");
     mostrarMensajeVuelo(t("invalidTitle"), t("invalidText"));
     input.focus();
     return;
   }
 
-  registrarInteraccion("BUSCAR_VUELO", `${numero} | ${modoFecha}`);
+  registrarInteraccion("BUSCAR_VUELO", `${numeroEscrito} | ${modoFecha}`);
+
+  cancelarBusqueda();
+
   buscandoVuelo = true;
   const boton = document.getElementById("btnBuscarVuelo");
   boton.disabled = true;
   mostrarCargandoVuelo();
 
-  cancelarBusqueda();
-  buscandoVuelo = true;
-  boton.disabled = true;
   controladorBusqueda = new AbortController();
-  const temporizador = window.setTimeout(() => controladorBusqueda.abort(), 30000);
+  const temporizador = window.setTimeout(
+    () => controladorBusqueda.abort(),
+    30000
+  );
+
+  let numeroEncontrado = numeroEscrito;
 
   try{
-    const url = `${API_VUELOS}?search=${encodeURIComponent(numero)}&day=${encodeURIComponent(modoFecha)}&_=${Date.now()}`;
-    const respuesta = await fetch(url, {
-      method:"GET",
-      cache:"no-store",
-      signal:controladorBusqueda.signal,
-      redirect:"follow"
-    });
+    let datosEncontrados = null;
 
-    if(!respuesta.ok){
-      throw new Error(`Servicio de vuelos respondió ${respuesta.status}`);
+    // Busca primero el código exacto escrito por el pasajero.
+    // Si no existe, intenta automáticamente la variante con cero inicial.
+    for(const numeroConsulta of variantesNumero){
+      const datos = await consultarVueloPorNumero(
+        numeroConsulta,
+        controladorBusqueda.signal
+      );
+
+      if(datos.found === true && datos.flight){
+        datosEncontrados = datos;
+        numeroEncontrado = numeroConsulta;
+        break;
+      }
     }
 
-    const datos = await respuesta.json();
-
-    if(!datos || datos.ok !== true){
-      const detalle = datos && datos.error ? datos.error : "Respuesta inválida del servicio de vuelos";
-      throw new Error(detalle);
-    }
-
-    if(datos.found !== true || !datos.flight){
-      registrarInteraccion("RESULTADO_VUELO", `${numero} | No encontrado | ${modoFecha}`);
+    if(!datosEncontrados){
+      registrarInteraccion(
+        "RESULTADO_VUELO",
+        `${numeroEscrito} | No encontrado | ${modoFecha} | Intentos: ${variantesNumero.join(", ")}`
+      );
       mostrarMensajeVuelo(t("notFoundTitle"), mensajeNoEncontrado());
       return;
     }
 
-    const meta = datos.meta || {};
+    // Si la API encontró AV048 a partir de AV48, se muestra el formato correcto.
+    input.value = numeroEncontrado;
+
+    const meta = datosEncontrados.meta || {};
     const vuelo = {
-      ...datos.flight,
+      ...datosEncontrados.flight,
       _tipo: meta.tipo || (meta.adi === "arrivals" ? "arrival" : "departure"),
-      _trafico: meta.scope || (datos.flight.tip_trafico === "I" ? "international" : "domestic"),
+      _trafico: meta.scope || (datosEncontrados.flight.tip_trafico === "I" ? "international" : "domestic"),
       _diaConsulta: meta.day || "today",
       _requestedDay: meta.requestedDay || modoFecha,
-      _selectedDate: meta.selectedDate || datos.flight.fch_prog || "",
+      _selectedDate: meta.selectedDate || datosEncontrados.flight.fch_prog || "",
       _dayRelation: meta.dayRelation || ""
     };
 
-    registrarInteraccion("RESULTADO_VUELO", `${numero} | Encontrado | ${modoFecha}`);
+    const detalleResultado = numeroEncontrado === numeroEscrito
+      ? `${numeroEscrito} | Encontrado | ${modoFecha}`
+      : `${numeroEscrito} → ${numeroEncontrado} | Encontrado | ${modoFecha}`;
+
+    registrarInteraccion("RESULTADO_VUELO", detalleResultado);
     mostrarTarjetaVuelo(vuelo);
+
   }catch(error){
     if(error.name !== "AbortError"){
       console.error("Error al consultar vuelo:", error);
     }
-    registrarInteraccion("ERROR_VUELO", `${numero} | ${modoFecha}`);
+
+    registrarInteraccion(
+      "ERROR_VUELO",
+      `${numeroEscrito} | ${modoFecha}`
+    );
     mostrarMensajeVuelo(t("apiErrorTitle"), t("apiErrorText"));
+
   }finally{
     window.clearTimeout(temporizador);
     controladorBusqueda = null;
